@@ -3,13 +3,20 @@ const input = fs.readFileSync(0).toString().trim().split('\n');
 
 let [n, m] = input[0].split(' ').map(Number);
 
-let answer = 0;
-
-for (let a = 1; a < 9901; a++) {
-    if (!((a % n) || (a % m))) {
-        answer = a;
-        break;
-    }
+// 최대공약수 - 유클리드 호제법
+function gcd(a, b) {
+  while (b !== 0) {
+    let r = a % b;
+    a = b;
+    b = r;
+  }
+  return a;
 }
 
-console.log(answer);
+// 최소공배수
+function lcm(a, b) {
+  return (a * b) / gcd(a, b);
+}
+
+const result = lcm(n, m);
+console.log(result);
