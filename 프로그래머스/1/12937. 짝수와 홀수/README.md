@@ -48,3 +48,15 @@
       </table>
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌풀이 메모
+
+**JavaScript**의 경우, truthy/falsy 개념이 있어서 숫자를 조건식에 바로 쓸 수 있다.
+```
+num % 2  // 결과: 숫자 (1 또는 0 또는 -1), 0은 falsy, 0이 아닌 수는 truthy이기 때문에 ? :에 바로 넣어도 동작한다.
+```
+**Java**는 강타입 언어라서 조건식에는 반드시 boolean 타입이 와야 한다.
+```
+if (num % 2) // 컴파일 에러: int는 boolean이 아님
+if (num % 2 == 0) // boolean이기 때문에 정상 동작
+```
