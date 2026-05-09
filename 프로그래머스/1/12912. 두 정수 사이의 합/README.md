@@ -58,3 +58,77 @@
       </table>
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌풀이 메모
+
+### 01. 기존 풀이
+```
+function solution(a, b) {
+    let array = [];
+    
+    if (a === b) {
+        array.push(a);
+    } else if (a < b) {
+        for (let i = a; i <= b; i++) {
+            array.push(i);
+        }
+    } else if (a > b) {
+        for (let i = b; i <= a; i++) {
+            array.push(i);
+        }
+    }
+    
+    return array.reduce((arr, curr) => arr + curr, 0);
+}
+```
+- 메모리 효율성: O(n)으로 비효율적
+- 가독성: `Math.min`과 `Math.max`를 활용하여 개선 가능
+
+### 02. 개선 방향: 기존 코드 개선(배열 없이 합산)
+```
+function solution(a, b) {
+    let sum = 0;
+    const min = Math.min(a, b);
+    const max = Math.max(a, b);
+
+    for (let i = min; i <= max; i++) {
+        sum += i;
+    }
+
+    return sum;
+}
+```
+
+### 03. 개선 방향: 가우스의 등차수열 합 공식(Math.abs 활용)
+```
+function solution(a, b) {
+    return (a + b) * (Math.abs(a - b) + 1) / 2;
+}
+```
+
+### 04. 개선 방향: 가우스의 등차수열 합 공식(정석)
+```
+function solution(a, b) {
+    const min = Math.min(a, b);
+    const max = Math.max(a, b);
+    const count = max - min + 1;
+
+    return (min + max) * count / 2;
+}
+```
+→ 명확한 의도가 설명되어있어 유지보수가 용이하다.
+
+### 05. 사전 지식
+- `Math.min(a, b, ...)`: 입력받은 여러 숫자 중 가장 작은 값을 찾아 반환한다.
+- `Math.max(a, b, ...)`: 입력받은 여러 숫자 중 가장 큰 값을 찾아 반환한다.
+- `Math.abs(n)`: 숫자의 부호를 제거하고 무조건 양수인 절댓값으로 만들어 반환한다.
+
+- `빅오 표기법(Big-O Notation)`: 알고리즘이 얼마나 효율적인지 나타내는 표기법이며, 빠른 순서는 아래와 같다.
+  ```
+  O(1) < O(log n) < O(n) < O(n log n) < O(n²) < O(2ⁿ)
+  빠름 ◀─────────────────────────────────────────▶ 느림
+  ```
+
+  - `O(1)`: 상수 시간 복잡도 → 입력값($n$)이 아무리 커지더라도 문제를 해결하는 데 걸리는 시간이 항상 일정한 경우.
+  
+  - `O(n)`: 선형 시간 복잡도 → 데이터 양($n$)에 따라 시간이 '직선(선) 모양'으로 늘어나는 경우.
