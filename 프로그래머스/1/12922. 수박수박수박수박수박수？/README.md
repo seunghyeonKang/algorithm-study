@@ -47,3 +47,58 @@
       </table>
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌풀이 메모
+
+### 01. 기존 풀이
+```
+function solution(n) {
+    let arr = [];
+    
+    for (let i = 0; i < n; i++) {
+        arr.push(i % 2 === 0 ? "수" : "박");
+    }
+    
+    return arr.reduce((arr,curr) => arr + curr, "");
+}
+```
+- 불필요한 배열 생성
+- `reduce`의 초기값 변수명 충돌 → `acc`나 `prev` 같은 관용적인 이름 사용하기
+
+### 02. 개선 방향: 기존 로직 다듬기 (Join 활용)
+```
+function solution(n) {
+    let arr = [];
+
+    for (let i = 0; i < n; i++) {
+        arr.push(i % 2 === 0 ? "수" : "박");
+    }
+
+    return arr.join("");
+}
+```
+
+### 03. 개선 방향: 기존 로직 다듬기 (배열 없이 문자열 누적)
+```
+function solution(n) {
+    let result = "";
+    
+    for (let i = 0; i < n; i++) {
+        result += i % 2 === 0 ? "수" : "박";
+    }
+    
+    return result;
+}
+```
+
+### 04. 개선 방향: 내장 함수 활용
+```
+function solution(n) {
+    return "수박".repeat(n / 2 + 1).slice(0, n);
+}
+```
+
+### 05. 사전 지식
+- `.join('')` : 배열의 요소들을 하나의 문자열로 합친다.
+- `.repeat(n)` : 문자열을 지정한 횟수만큼 반복한다.
+- `.slice(start, end)` : 문자열(또는 배열)을 지정한 범위만큼 잘라낸다.
