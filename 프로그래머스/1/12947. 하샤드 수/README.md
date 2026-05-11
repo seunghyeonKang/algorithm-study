@@ -73,3 +73,51 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌풀이 메모
+
+### 01. 기존 풀이
+```
+function solution(x) {
+    if(x % String(x).split("").reduce((acc,curr) => acc + Number(curr) , 0) === 0) return true;
+
+    return false;
+}
+```
+- 조건문 간소화 → 불필요한 `if`문 제거하기
+- 가독성을 위한 변수 분리
+
+### 02. 다른 풀이: 암시적 형변환 & 스프레드 문법 활용
+```
+function solution(x) {
+    return x % [...(x + "")].reduce((acc,curr) => acc + (+curr) , 0) === 0;
+}
+```
+- **`장점`**: 코드가 짧아짐
+- **`단점1`**: 의도 파악이 어려움
+- **`단점2`**: 예상치 못한 결과를 낼 수 있음
+
+### 03. 다른 풀이: 수학적 접근
+```
+function solution(x) {
+    let sum = 0;
+    let tempX = x;
+    
+    while (tempX > 0) {
+        sum += tempX % 10;
+        tempX = Math.floor(tempX / 10);
+    }
+    
+    return x % sum === 0;
+}
+```
+
+### 04. 사전 지식
+- `String()`: 문자열 데이터 타입으로 변환해주는 내장 함수
+- `x + ""`: 숫자 → 문자열 (암묵적 형변환)
+- `+curr`: 문자열 → 숫자 (단항 + 연산자, 암묵적 형변환)
+- `[...(x + "")]`: 문자열 → 배열 (스프레드 문법)
+  
+  → `split("")`은 코드 유닛 단위로 자르기 때문에 이모지를 깨뜨린다.
+  
+  → 스프레드는 유니코드 코드 포인트 단위로 처리하여 이모지를 온전히 유지한다.
