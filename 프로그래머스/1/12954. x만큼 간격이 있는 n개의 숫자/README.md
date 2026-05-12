@@ -56,3 +56,42 @@
       </table>
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌풀이 메모
+
+### 01. 기존 풀이
+```
+function solution(x, n) {
+    let answer = [];
+
+    for (let i = 1; i <= n; i++) {
+        answer.push(x * i);
+    }
+
+    return answer;
+}
+```
+
+### 02. 다른 풀이: 배열 메서드 활용 - `Array.from()`
+```
+function solution(x, n) {
+    return Array.from({ length: n }, (_, i) => x * (i + 1));
+}
+```
+
+### 03. 다른 풀이: 배열 메서드 활용 - `fill()`과 `map()`
+```
+function solution(x, n) {
+    return Array(n).fill(x).map((v, i) => v * (i + 1));
+}
+```
+
+### 04. 사전 지식
+- `Array(n)` : 길이가 n인 빈 슬롯 배열 생성
+- `Array.from()` : 이터러블 또는 유사 배열을 실제 배열로 변환
+- `.fill()` : 배열의 모든 요소를 특정 값으로 채움
+- `.map()` : 배열의 각 요소를 콜백 함수로 변환한 새 배열 반환
+- 대부분의 자바스크립트 표준 배열 메서드의 **콜백함수의 인자**가 아래 규칙을 따른다. (예외: `reduce` 등)
+  - **`첫 번째 인자`**: 현재 처리 중인 요소의 값 $(Value)$
+  - **`두 번째 인자`**: 현재 처리 중인 인덱스 $(Index)$
+  - **`세 번째 인자`**: 메서드를 호출한 배열 자체 $(Array)$
