@@ -67,3 +67,27 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌풀이 메모
+
+### 01. 기존 풀이
+```
+function solution(n) {
+    let i = 2
+    while(n % i !== 1) i++;
+    return i;
+}
+```
+- `i`는 관례적으로 인덱스($index$)를 의미하므로 변수명을 `divisor`나 `x`로 수정하자.
+
+### 02. 개선 방향: `for`문 사용
+```
+function solution(n) {
+    for (let i = 2; i < n; i++) {
+        if (n % i === 1) return i;
+    }
+}
+```
+→ `let i`를 `for`문에서만 사용하기 때문에 변수 스코프가 좁다.
+
+→ `i < n`가 있어 탐색 범위가 명시적이다.
