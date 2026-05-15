@@ -75,3 +75,44 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 Code Review 📌
+
+### 01. 기존 풀이
+```
+function solution(num) {
+    if (num === 1) {
+        return 0;
+    } else {
+        for (let i = 0; i < 500; i++) {
+            if (num % 2 === 0) {
+                num /= 2;
+            } else {
+                num = num * 3 + 1;
+            }
+            if (num === 1) return i + 1;
+        }
+        
+        return -1;
+    }
+}
+```
+- 불필요한 `else`를 제거하여 더 간결하게 표현하자.
+- `(num * 3) + 1`와 같이 명시적으로 표현할 수 있다.
+
+### 02. 개선 방향: `while` 루프와 삼항 연산자 활용
+```
+function solution(num) {
+    let answer = 0;
+    while (num !== 1 && answer < 500) {
+        num = (num % 2 === 0) ? (num / 2) : (num * 3 + 1);
+        answer++;
+    }
+
+    return num === 1 ? answer : -1;
+}
+```
+
+### 03. 사전 지식
+- `&&` 연산자: 모든 조건이 참(`true`)일 때만 전체를 참으로 판단한다.
+- `||` 연산자: 조건 중 하나만 참(`true`)이어도 전체를 참으로 판단한다.
