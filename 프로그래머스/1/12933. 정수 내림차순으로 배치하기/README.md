@@ -43,3 +43,51 @@
       </table>
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 Code Review 📌
+
+### 01. 기존 풀이
+```
+function solution(n) {
+    return Number(
+        String(n)
+            .split("")
+            .sort((a, b) => b - a)
+            .reduce((acc, curr) => acc + curr)
+    );
+}
+```
+- `.reduce()`의 과한 사용 → `.join("")`로 대체하자.
+
+### 02. 개선 방향: `.join("")` 활용
+```
+function solution(n) {
+    return Number(
+        String(n)
+            .split("")
+            .sort((a, b) => b - a)
+            .join("")
+    );
+}
+```
+
+### 03. 사전 지식
+- `.join("")`: 배열의 모든 요소를 이어 붙여 하나의 문자열로 만들어주는 메서드
+- `sort()`의 시간 복잡도 원리 → O(n log n)이 나오는 이유
+  - $n$개의 요소를 정렬할 때, 가장 효율적인 비교 기반 정렬 알고리즘의 이론적 하한이 $O(n log n)$이다.
+
+    ```
+    요소가 8개일 때
+    전체를 절반씩 나누는 횟수 → log₂8 = 3번
+    각 단계에서 비교 횟수     → 최대 n(8)번
+
+    총 비교 횟수 → n × log n = 8 × 3 = 24번
+    ```
+  - JavaScript의 `sort`는 엔진마다 다르지만, V8(Node.js, Chrome)은 **TimSort**를 사용한다.
+
+    **TimSort**는 병합 정렬 + 삽입 정렬을 결합한 알고리즘으로, 최선/평균/최악 모두 O(n log n)을 보장한다.
+    ```
+    삽입 정렬  → 작은 구간에서 빠름
+    병합 정렬  → 큰 구간에서 O(n log n) 보장
+    TimSort    → 둘을 상황에 따라 혼합
+    ```
