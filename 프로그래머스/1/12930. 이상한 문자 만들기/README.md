@@ -52,3 +52,42 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 Code Review 📌
+
+### 01. 기존 풀이
+```
+function solution(s) {
+    return s.split(" ").map((arr, _) => {
+        return arr.split("").map((alp, i) => {
+            return (i % 2 === 0) ? alp.toUpperCase() : alp.toLowerCase()
+        }).join("");
+    }).join(" ");
+}
+```
+- 사용하지 않는 매개변수 삭제: `_`
+- 불명확한 변수명 수정: `arr` → `word`, `alp` → `char`
+- `Implicit return`로 간결하게 수정
+
+### 02. 개선 방향: 기존 코드 리팩토링
+```
+function solution(s) {
+    return s.split(" ").map((word) =>
+        word.split("").map((char, i) =>
+            i % 2 === 0 ? char.toUpperCase() : char.toLowerCase()
+        ).join("")
+    ).join(" ");
+}
+```
+
+### 03. 다른 풀이: 정규표현식 활용
+```
+function toWeirdCase(s){
+    return s.toUpperCase().replace(/(\w)(\w)/g, function(a){return a[0].toUpperCase()+a[1].toLowerCase();})
+}
+```
+
+### 04. 사전 지식
+- `.map()`: 배열의 각 요소에 콜백 함수를 적용한 결과로 새 배열을 반환하는 메서드
+- `.toUpperCase()`: 문자열의 모든 문자를 대문자로 변환한 새 문자열을 반환하는 메서드
+- `.toLowerCase()`: 문자열의 모든 문자를 소문자로 변환한 새 문자열을 반환하는 메서드
