@@ -45,3 +45,38 @@
       </table>
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 Code Review 📌
+
+### 01. 기존 풀이
+```
+function solution(seoul) {
+    let x = 0;
+    for (let char of seoul) {
+        if (char === "Kim") return `김서방은 ${x}에 있다`
+        x++;
+    }
+}
+```
+- 변수명 `char` 대신 `name`으로 수정
+- "Kim"을 못 찾았을 때 `undefined`를 반환하지 않도록 방어적인 코드 작성 습관 만들기
+
+### 02. 개선 방향: `indexOf()` 활용
+```
+function solution(seoul) {
+    const x = seoul.indexOf("Kim");
+    return `김서방은 ${x}에 있다`;
+}
+```
+
+### 03. 다른 풀이: `findIndex()` 활용
+```
+function solution(seoul) {
+    const x = seoul.findIndex(name => name === "Kim");
+    return `김서방은 ${x}에 있다`;
+}
+```
+
+### 04. 사전 지식
+- `.indexOf()`: 배열에서 해당 값의 첫 번째 인덱스를 반환
+- `.findIndex()`: 배열에서 조건식(콜백 함수)을 만족하는 최초의 요소의 위치를 반환
