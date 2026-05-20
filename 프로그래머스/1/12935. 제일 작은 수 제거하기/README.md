@@ -48,3 +48,47 @@
       </table>
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 Code Review 📌
+
+### 01. 기존 풀이
+```
+function solution(arr) {
+    if (arr.length === 1) return [-1];
+    
+    let min = arr[0];
+    
+    for (let num of arr) {
+        if (min > num) min = num
+    }
+    
+    return arr.filter((n) => n !== min);
+}
+```
+
+### 02. 개선 방향: `Math.min()`과 Spread 연산자 활용
+```
+function solution(arr) {
+    if (arr.length === 1) return [-1];
+    
+    const min = Math.min(...arr);
+    
+    return arr.filter((n) => n !== min);
+}
+```
+
+### 03. 다른 풀이: `.indexOf()`와 `.splice()` 활용
+```
+function solution(arr) {
+    if (arr.length <= 1) return [-1];
+    
+    arr.splice(arr.indexOf(Math.min(...arr)), 1);
+    
+    return arr;
+}
+```
+- 전체 요소를 검사하는 `filter`와 달리 `splice`는 해당 인덱스만 찾기 때문에, 요소 중복이 없는 이 문제에서 성능이 미세하게 좋다.
+
+### 04. 사전 지식
+- `Math.min()`: 인자로 전달받은 여러 숫자들 중 가장 작은 값을 찾아서 반환하는 자바스크립트 내장 함수
+- `.splice()`: 배열의 특정 위치에 있는 요소를 추가하거나 삭제하여 원본 배열을 직접 수정하는 내장 함수
