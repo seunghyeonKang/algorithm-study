@@ -48,3 +48,40 @@
       </table>
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 Code Review 📌
+
+### 01. 기존 풀이
+```
+function solution(phone_number) {
+    let forNum = "";
+    let lastNum = "";
+    for (let i = 0; i < phone_number.length - 4; i ++) {
+        forNum += "*";
+    }
+    for (let i = phone_number.length - 4; i < phone_number.length; i++) {
+        lastNum += phone_number[i];
+    }
+    return forNum + lastNum;
+}
+```
+
+### 02. 개선 방향: `repeat()`와 `slice()` 활용
+```
+function solution(phone_number) {
+    return "*".repeat(phone_number.length - 4) + phone_number.slice(-4);
+}
+```
+
+### 03. 개선 방향: `replace()`와 정규표현식 활용
+```
+function solution(phone_number) {
+    return phone_number.replace(/\d(?=\d{4})/g, '*');
+}
+```
+→ 뒤의 4자리를 제외한(`?!.{4}$`) 모든 숫자(`\d`)를 `*`로 바꾼다.
+
+### 04. 사전 지식
+- `String.prototype.repeat(n)`: 문자열을 n번 반복한 새 문자열을 반환한다.
+- `문자열.slice(start, end)`: 문자열을 start 인덱스부터 end 인덱스 직전까지 잘라 반환한다.
+- `String.prototype.replace(바꿀 대상, 바꿀 내용)`: 문자열에서 특정 문자나 패턴(정규식)을 찾아 원하는 다른 문자열로 바꿔주는 함수이다.
