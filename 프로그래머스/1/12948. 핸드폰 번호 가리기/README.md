@@ -85,3 +85,20 @@ function solution(phone_number) {
 - `String.prototype.repeat(n)`: 문자열을 n번 반복한 새 문자열을 반환한다.
 - `문자열.slice(start, end)`: 문자열을 start 인덱스부터 end 인덱스 직전까지 잘라 반환한다.
 - `String.prototype.replace(바꿀 대상, 바꿀 내용)`: 문자열에서 특정 문자나 패턴(정규식)을 찾아 원하는 다른 문자열로 바꿔주는 함수이다.
+1. **일반 문자열을 바꿀 때** → 가장 처음 만나는 것 하나만 변경한다.
+   ```
+   // 문자열.replace("찾을 문자", "새로운 문자")
+   
+   let text = "Hello World";
+   let result = text.replace("World", "JavaScript");
+   console.log(result); // 출력: "Hello JavaScript"
+   ```
+  
+2. **정규표현식을 바꿀 때** → 패턴을 지정하거나 전체를 변경한다.
+   ```
+   // 문자열.replace(/찾을 패턴/g, "새로운 문자")  (뒤에 붙는 g는 전체를 다 바꾸겠다는 뜻)
+   
+   let text = "apple, banana, apple";
+   let result = text.replace(/apple/g, "grape");
+   console.log(result); // 출력: "grape, banana, grape" (모든 apple이 변경됨)
+   ```
