@@ -81,3 +81,53 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 Code Review 📌
+
+### 01. 기존 풀이
+```
+function solution(absolutes, signs) {
+    for (let i in absolutes) {
+        if (signs[i] === false) absolutes[i] = -absolutes[i];
+    }
+    
+    return absolutes.reduce((acc, curr) => acc + curr);
+}
+```
+1. `for...in` 대신 일반 `for` 루프나 `forEach` 사용하기
+2. 원본 데이터 변조(Mutation) 방지하기
+3. `reduce` 초기값 설정하기
+
+### 02. 개선 방향: `forEach` 활용하여 원래 방식 보완
+```
+function solution(absolutes, signs) {
+    absolutes.forEach((num, i) => {
+        if (signs[i] === false) {
+            absolutes[i] = -num;
+        }
+    });
+    
+    return absolutes.reduce((acc, curr) => acc + curr, 0);
+}
+```
+
+### 03. 개선 방향: `map` 활용하여 원래 방식 보완
+```
+function solution(absolutes, signs) {
+    const realNumbers = absolutes.map((num, i) => signs[i] ? num : -num);
+    
+    return realNumbers.reduce((acc, curr) => acc + curr, 0);
+}
+```
+
+### 04. 개선 방향: `reduce`와 인덱스 활용하여 깔끔하게 처리
+```
+function solution(absolutes, signs) {
+    return absolutes.reduce((acc, curr, i) => acc + (signs[i] ? curr : -curr), 0);
+}
+```
+
+### 05. 사전 지식
+- `forEach`: 배열의 모든 요소를 순회하며 단순히 지정된 작업을 실행할 뿐, 아무것도 반환하지 않는(undefined) 반복문 전용 메서드이다.
+- `map`: 배열의 모든 요소를 하나씩 가공하여 길이와 순서가 똑같은 **새로운 배열**을 만들어 반환한다.
+- `reduce`: 배열의 요소를 하나씩 줄여가며 누적 계산을 수행하고, 최종적으로 **단 하나의 값**(숫자, 객체, 배열 등)으로 뭉쳐서 반환한다.
