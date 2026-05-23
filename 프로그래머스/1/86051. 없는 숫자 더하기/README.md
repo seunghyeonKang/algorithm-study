@@ -72,3 +72,71 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 Code Review 📌
+
+### 01. 기존 풀이
+```
+function solution(numbers) {
+    const total = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].reduce((acc, curr) => acc + curr, 0);
+    
+    return total - numbers.reduce((acc, curr) => acc + curr, 0);
+}
+```
+- 시간복잡도가 O($N$)이고 간결하다.
+
+### 02. 기존 풀이
+```
+function solution(numbers) {
+    let arr = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+    
+    for (let num of numbers) {
+        arr = arr.filter((n) => n !== num);
+    }
+    
+    return arr.reduce((acc, curr) => acc + curr, 0);
+}
+```
+- 직관적이나, 시간복잡도가 O($N × M$)이기에 효율성이 낮다.
+
+### 03. 개선 방향: `total` 값을 고정 상수로 처리
+```
+function solution(numbers) {
+    const TOTAL_SUM = 45; // 0부터 9까지의 합
+    return TOTAL_SUM - numbers.reduce((acc, curr) => acc + curr, 0);
+}
+```
+
+### 04. 다른 풀이: `includes()`를 활용한 정공법
+```
+function solution(numbers) {
+    let answer = 0;
+
+    for(let i = 0; i <= 9; i++) {
+        if(!numbers.includes(i)) answer += i;
+    }
+
+    return answer;
+}
+```
+- O(10 × M) `(M: numbers 길이)`
+- 시간복잡도가 평균 O(1)인 `Set.has​`를 사용하는 것을 더 권장한다.
+
+### 05. 개선 방향: `Set.has()​`를 활용한 정공법
+```
+function solution(numbers) {
+    const set = new Set(numbers);
+    let answer = 0;
+    
+    for (let i = 0; i <= 9; i++) {
+        if (!set.has(i)) answer += i;
+    }
+    
+    return answer;
+}
+```
+
+### 06. 사전 지식
+- `배열.includes(찾을값)`: 배열에 특정 값이 포함되어 있는지 확인하는 메서드
+- `Set`: 중복을 허용하지 않는 값들의 집합을 다루는 JavaScript 내장 자료구조
+- `Set.prototype.has()`: `Set` 안에 특정 값이 존재하는지 확인하는 메서드
