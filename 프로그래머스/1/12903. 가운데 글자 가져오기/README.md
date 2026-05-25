@@ -47,3 +47,44 @@
       </table>
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 Code Review 📌
+
+### 01. 기존 풀이
+```
+function solution(s) {
+    const l = s.length;
+    return (l % 2 === 0 ? s[l / 2 - 1] + s[l / 2] : s[(l - 1) / 2]);
+}
+```
+- 안전장치로 소수점을 버리는 함수(`Math.floor`)을 습관화하는 것이 좋다.
+- const `l`은 숫자 `1`이나 알파벳 대문자 `I`와 헷갈릴 수 있으므로 `len`이나 `length`로 명확히 하는게 좋다.
+
+### 02. 개선 방향: `Math.floor` 활용 및 중복 계산 줄이기
+```
+function solution(s) {
+    const len = s.length;
+    const mid = Math.floor(len / 2);
+    
+    return len % 2 === 0 ? s[mid - 1] + s[mid] : s[mid];
+}
+```
+
+### 03. 다른 풀이: `slice()` 활용
+```
+function solution(s) {
+    const mid = Math.floor(s.length / 2);
+    return s.slice(mid - (s.length % 2 === 0 ? 1 : 0), mid + 1);
+}
+```
+
+### 04. 다른 풀이: `slice()`와 `Math.ceil()` 활용
+```
+function solution(s) {
+    return s.slice(Math.ceil(s.length / 2) - 1, Math.floor(s.length / 2) + 1);
+}
+```
+
+### 05. 사전 지식
+- `string.slice(beginIndex, endIndex)`: 배열이나 문자열의 일부분을 추출해서 새로운 배열이나 문자열로 반환
+- `Math.ceil(number)`: 소수점이 있으면 무조건 올림(Ceiling)하여 더 큰 정수로 만드는 함수
