@@ -44,3 +44,31 @@ s는 영문 대소문자로만 구성되어 있으며, 대문자는 소문자보
       </table>
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 Code Review 📌
+
+### 01. 기존 풀이
+```
+function solution(s) {
+    return s.split("").sort().reverse().reduce((acc, cur) => acc + cur, "");
+}
+```
+
+### 02. 개선 방향: `reduce()` 대신 `join()` 활용
+```
+function solution(s) {
+    return s.split("").sort().reverse().join("");
+}
+```
+
+### 03. 다른 풀이: `charCodeAt()` 활용
+```
+function solution(s) {
+    return s.split("")
+            .sort((a, b) => b.charCodeAt(0) - a.charCodeAt(0))
+            .join("");
+}
+```
+
+### 04. 사전 지식
+- `charCodeAt(0)`: 문자열에서 특정 인덱스에 위치한 문자의 ASCII(유니코드) 코드 번호를 반환
