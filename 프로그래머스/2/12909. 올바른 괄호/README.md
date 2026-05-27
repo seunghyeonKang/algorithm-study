@@ -70,3 +70,32 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 Code Review 📌
+
+### 01. 기존 풀이
+```
+function solution(s){
+    let i = 0;
+    for (let char of s) {
+        if (i < 0) return false;
+        char === "(" ? i++ : i--
+    }
+
+    return i === 0 ? true : false;
+}
+```
+- 조기 종료 조건의 위치 개선
+- 불필요한 삼항 연산자 제거
+
+### 02. 개선 방향: 기존 풀이 리팩토링
+```
+function solution(s) {
+    let count = 0;
+    for (let char of s) {
+        char === "(" ? count++ : count--;
+        if (count < 0) return false;
+    }
+    return count === 0;
+}
+```
