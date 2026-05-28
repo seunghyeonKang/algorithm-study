@@ -52,3 +52,83 @@
       </table>
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 Code Review 📌
+
+### 01. 기존 풀이
+```
+function solution(s) {
+    let arr = s.split(" ");
+    let min = Math.min(...arr);
+    let max = Math.max(...arr);
+    return `${min} ${max}`;
+}
+```
+- 타입 변환 누락
+- `let` → `const`
+- 스프레드 연산자 주의사항
+
+### 02. 개선 방향: 기존 코드 리팩토링
+```
+function solution(s) {
+    const arr = s.split(" ").map(Number);
+    const min = Math.min(...arr);
+    const max = Math.max(...arr);
+    return `${min} ${max}`;
+}
+```
+
+### 03. 개선 방향: 대용량 데이터 안전 버전
+```
+function solution(s) {
+    const numbers = s.split(" ").map(Number);
+    
+    let min = Infinity;
+    let max = -Infinity;
+    
+    for (const num of numbers) {
+        if (num < min) min = num;
+        if (num > max) max = num;
+    }
+    
+    return `${min} ${max}`;
+}
+```
+
+### 04. 사전 지식
+- `.map(Number)`: `.map((x) => Number(x))`의 축약형
+- `Infinity`: JavaScript에서 무한대를 나타내는 값
+- 객체와 구조 분해 할당
+
+  ```
+  const result = { min: 1, max: 4 };
+  const { min, max } = result;
+
+  // → 아래와 동일
+  
+  const min = result.min;
+  const max = result.max;
+  ```
+- `Math.min(...arr)`의 치명적인 약점
+
+  함수에 전달할 수 있는 인자(Arguments)의 개수 제한이 보통 약 6만 개 ~ 12만 개 정도이다. 만약 문자열 `s`에 포함된 숫자가 그 이상이라면 `RangeError: Maximum call stack size exceeded` 에러가 나며 프로그램이 뻗는다.
+- 가비지 컬렉션(Garbage Collector) - `reduce`
+
+  ```
+  // 방식 A: reduce 두 번
+  const min = numbers.reduce((a, b) => a < b ? a : b);
+  const max = numbers.reduce((a, b) => a > b ? a : b);
+  ```
+  → 순회 횟수: 2n, 객체 생성 없음, 대용량에서 유리
+
+  ```
+  // 방식 B: reduce 한 번 (객체 생성)
+  const { min, max } = numbers.reduce(
+      (acc, cur) => ({
+          min: Math.min(acc.min, cur),
+          max: Math.max(acc.max, cur),
+      }),
+      { min: Infinity, max: -Infinity }
+  );
+  ```
+  → 순회 횟수: n, 객체 생성 n개, 이론상 빠르나 GC 부담 있음
