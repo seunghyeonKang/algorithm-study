@@ -139,3 +139,55 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 Code Review 📌
+
+### 01. 기존 풀이
+```
+function solution(left, right) {
+    let answer = 0;
+    let count = 0;
+    
+    for (let num = left; num <= right; num++) {
+        count = 0;
+        for (let i = 1; i <= num; i++) {
+            if (num % i === 0) count++;
+        }
+        if (count % 2 === 0) {
+            answer += num;
+        } else {
+            answer -= num;
+        }
+    }
+    
+    return answer;
+}
+```
+- count 변수 선언 위치를 사용 범위(scope) 안으로 이동
+
+### 02. 다른 풀이: 수학적 최적화 - 약수의 홀짝 원리
+```
+function solution(left, right) {
+    let answer = 0;
+    
+    for (let num = left; num <= right; num++) {
+        // 제곱근이 정수이면 약수의 개수는 홀수이다.
+        if (Number.isInteger(Math.sqrt(num))) {
+            answer -= num;
+        } else {
+            answer += num;
+        }
+    }
+    
+    return answer;
+}
+```
+
+### 03. 사전 지식
+- 약수의 개수가 홀수인 수는 완전제곱수뿐이다.
+- `Number.isInteger()`: 전달된 값이 정수(Integer)인지 아닌지 판별하여 true 또는 false를 반환하는 메서드
+- `Math.sqrt()`: 전달된 숫자의 제곱근(Square Root, $\sqrt{x}$)을 계산해서 반환하는 메서드
+- JavaScript에서 원시값은 GC 대상이 아니다.
+  - 원시값은 힙(heap)에 할당되지 않고 스택(stack)에 저장되기 때문에, 스코프가 끝나면 그냥 스택에서 pop될 뿐 GC가 개입하지 않는다.
+  - 원시값: `number`, `string`, `boolean`, `null`, `undefined`, `symbol`, `bigint`
+  - 객체: `object`, `array`, `function` 등
