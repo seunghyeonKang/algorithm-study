@@ -66,3 +66,33 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 Code Review 📌
+
+### 01. 기존 풀이
+```
+function solution(price, money, count) {
+    let total = 0;
+    for (let i = 1; i <= count; i++) {
+        total += i * price;
+    }
+    return total <= money ? 0 : total - money;
+}
+```
+→ 등차수열의 합 공식을 활용하여 O(n)가 아닌 O(1)로 풀 수 있다.
+
+### 02. 개선 방향: 등차수열 공식 활용
+```
+function solution(price, money, count) {
+    const total = price * count * (count + 1) / 2;
+    return total <= money ? 0 : total - money;
+}
+```
+
+### 03. 다른 풀이: `Math.max()` 활용
+```
+function solution(price, money, count) {
+    const total = price * count * (count + 1) / 2;
+    return Math.max(0, total - money);
+}
+```
