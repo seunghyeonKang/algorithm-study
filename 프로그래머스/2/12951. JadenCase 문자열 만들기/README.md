@@ -59,3 +59,52 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 Code Review 📌
+
+### 01. 기존 풀이
+```
+function solution(s) {
+    return s.split(" ").map((word, i) => {
+        let charArr = word.split("");
+        return charArr.map((char, i) => {
+            if (i === 0) {
+                return char.toUpperCase();
+            } else {
+                return char.toLowerCase();
+            }
+        }).join("");
+    }).join(" ");
+}
+```
+- `charArr`는 선언하자마자 바로 `.map()`에만 쓰이므로 인라인으로 처리해도 된다.
+- 내부 `.map()` → 슬라이싱(`slice(1)`)으로 단순화할 수 있다.
+
+### 02. 개선 방향: `charAt`과 `slice` 활용 (가장 안전한 방법)
+```
+function solution(s) {
+    return s.split(" ").map(word => {
+        return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+    }).join(" ");
+}
+```
+
+### 03. 다른 풀이: 인덱스 접근 방식 (직관적인 방법)
+```
+function solution(s) {
+    return s.split(" ").map(word => {
+        if (!word) return ""; 
+        
+        return word[0].toUpperCase() + word.slice(1).toLowerCase();
+    }).join(" ");
+}
+```
+→ 공백이 연속으로 들어와 `word`가 빈 문자열(`""`)인 경우 그대로 반환
+
+### 04. 사전 지식
+- `charAt(0)`은 빈 문자열일 때 에러 대신 `""`을 반환한다.
+- `map()` 메서드는 원본 배열을 수정하지 않고, 항상 변형된 '새로운 배열'을 반환한다.
+- `toUpperCase()`: 문자열의 모든 알파벳을 대문자로 변환한다.
+- `toLowerCase()`: 문자열의 모든 알파벳을 소문자로 변환한다.
+- `charAt(i)`: 문자열에서 인덱스 `i`에 위치한 문자 하나를 반환한다.
+- `slice(start, end)`: 문자열에서 `start` 인덱스부터 `end` 직전까지 잘라 반환한다. (end 생략 시 끝까지)
