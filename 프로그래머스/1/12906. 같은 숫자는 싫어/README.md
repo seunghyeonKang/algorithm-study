@@ -62,3 +62,40 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## :pushpin: Code Review :pushpin:
+
+### 01. 기존 풀이
+```
+function solution(arr) {
+    return arr.filter((num, i) => i === 0 || arr[i] !== arr[i - 1]);
+}
+```
+
+### 02. 개선 방향: `num` 변수 활용
+```
+function solution(arr) {
+    return arr.filter((num, i) => i === 0 || num !== arr[i - 1]);
+}
+```
+
+### 03. 다른 풀이: `for`문 활용
+```
+function solution(arr) {
+    const answer = [];
+    for (let i = 0; i < arr.length; i++) {
+        // answer의 마지막 원소와 현재 원소가 다를 때만 추가
+        if (answer[answer.length - 1] !== arr[i]) {
+            answer.push(arr[i]);
+        }
+    }
+    return answer;
+}
+```
+- 기존 풀이와 `for`문 모두 배열을 한 번만 도는 $O(N)$ 복잡도를 가지지만 `for`문을 활용한 코드가 훨씬 빠르다.
+1. 함수 호출(Function Call)의 오버헤드: 기존 풀이는 배열의 모든 원소마다 화살표 함수 `(num, i) => ...`를 매번 호출한다.
+2. 조건문의 단락 평가(Short-circuit Evaluation) 효율 차이: 기존 풀이의 경우, `i === 0`인지 체크하는 연산이 매번 들어간다.
+3. 자바스크립트 엔진의 최적화: 현대 JavaScript 엔진은 단순한 `for` 루프를 보면 아주 극단적으로 최적화한다.
+
+### 04. 사전 지식
+- `for...in`은 `i`가 문자열이기 때문에 배열에 매우 느리다. 객체의 속성(Property)을 순회할 때 사용하자.
