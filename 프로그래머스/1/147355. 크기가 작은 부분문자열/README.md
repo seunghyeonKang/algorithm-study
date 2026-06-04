@@ -76,3 +76,55 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 Code Review 📌
+
+### 01. 기존 풀이
+```
+function solution(t, p) {
+    let answer = 0;
+    const pNum = Number(p);
+    for (let i = 0; i < t.length - p.length + 1; i++) {
+        if (pNum >= Number(t.slice(i, i + p.length))) answer++;
+    }
+    return answer;
+}
+```
+→ 정수 정밀도 한계: `Number` 타입은 안전하게 표현할 수 있는 최대 정수 값이 ($2^{53} - 1$)(16자리)이기 때문에, 문자열이 17~18자리 숫자로 나오면 `Number()` 변환 과정에서 정밀도가 손실되어 크기 비교가 부정확해질 수 있다.
+
+### 02. 개선 방향: `BigInt` 사용
+```
+function solution(t, p) {
+    let answer = 0;
+    const pNum = BigInt(p);
+    const pLen = p.length;
+    
+    for (let i = 0; i <= t.length - pLen; i++) {
+        if (pNum >= BigInt(t.slice(i, i + pLen))) {
+            answer++;
+        }
+    }
+    return answer;
+}
+```
+
+### 03. 다른 풀이: 문자열 자체로 비교
+```
+function solution(t, p) {
+    let answer = 0;
+    const pLen = p.length;
+    
+    for (let i = 0; i <= t.length - pLen; i++) {
+        const subStr = t.slice(i, i + pLen);
+        if (subStr <= p) {
+            answer++;
+        }
+    }
+    return answer;
+}
+```
+- 두 문자열의 길이가 항상 같을 때 문자열로도 비교를 할 수 있다.
+- 유니코드 값을 기준으로 비교하기 때문에, 문자열 길이가 다른 경우에는 숫자 비교가 이상해진다.
+
+### 04. 사전 지식
+- 문자열도 비교를 할 수 있다.
