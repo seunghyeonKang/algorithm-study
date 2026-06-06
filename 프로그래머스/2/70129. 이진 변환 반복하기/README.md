@@ -199,3 +199,54 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 Code Review 📌
+
+### 01. 기존 풀이
+```
+function solution(s) {
+    let numZero = 0;
+    let funNum = 0;
+    
+    const ParseArr = (arr) => {
+        let len = arr.split("").filter((n) => n === "1").length;
+        numZero += arr.length - len;
+        funNum++;
+        return len.toString(2);
+    }
+    
+    while (s !== "1") {
+        s = ParseArr(s);
+    }
+    
+    return [funNum, numZero];
+}
+```
+→ 문자열을 모든 글자 단위로 쪼개어 새로운 배열을 생성하고, `filter`를 돌리면 메모리를 많이 잡아먹고 속도가 느려진다.
+
+### 02. 개선 방향: `split("").filter()` 대신 `replaceAll`로 단순화
+```
+function solution(s) {
+    let numZero = 0;
+    let funNum = 0;
+    
+    const binaryTransform = (str) => {
+        const ones = str.replaceAll("0", "");
+        numZero += str.length - ones.length;
+        funNum++;
+        return ones.length.toString(2);
+    }
+    
+    while (s !== "1") {
+        s = binaryTransform(s);
+    }
+    
+    return [funNum, numZero];
+}
+```
+→ 기존 테스트 10번에서 `4.66ms`이던 것을 `3.81ms`로 줄였다.
+
+### 03. 사전 지식
+- `replaceAll()`: 문자열 내에서 특정 문자(또는 정규식)와 일치하는 모든 부분을 새로운 문자열로 한 번에 교체할 수 있는 내장 메서드
+- `10진수.toString(2)`: 10진수 숫자를 괄호 안의 진수(여기서는 2진수) 형태를 가진 '문자열'로 변환해 주는 메서드
+- `parseInt("2진수 문자열", 2)`: 특정 진법(여기서는 2진법)으로 표현된 문자열을 다시 컴퓨터가 인식하는 10진수 '숫자'로 변환해 주는 함수.
