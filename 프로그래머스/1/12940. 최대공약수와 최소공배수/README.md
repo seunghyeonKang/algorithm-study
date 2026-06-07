@@ -104,7 +104,7 @@ function solution(n, m) {
 ```
 function solution(n, m) {
     function gcd(a, b) {
-        return b === 0 ? a : gcd(a, b % a);
+        return b === 0 ? a : gcd(b, b % a);
     }
 
     const g = gcd(n, m);
