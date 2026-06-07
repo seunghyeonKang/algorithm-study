@@ -58,3 +58,61 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 Code Review 📌
+
+### 01. 기존 풀이
+```
+function solution(n, m) {
+    let max = Math.max(n, m);
+    let min = Math.min(n, m);
+    let a;
+    for (let i = min; i > 0; i--) {
+        if (max % i === 0 && min % i === 0) {
+            a = i;
+            break;
+        }
+    }
+    let answer = [];
+    answer.push(a);
+    answer.push(max * min / a);
+    return answer;
+}
+```
+→ 시간 복잡도가 현재 방식은 O(min(n, m))이다. 유클리드 호재법을 활용하면 O(log(min(n, m)))으로 훨씬 빠르다.
+
+### 02. 개선 방향: 유클리드 호제법 적용
+```
+function solution(n, m) {
+    const getGCD = (a, b) => {
+        while (b !== 0) {
+            let r = a % b;
+            a = b;
+            b = r;
+        }
+        return a;
+    };
+    
+    const gcd = getGCD(n, m);
+    const lcm = (n * m) / gcd;
+    
+    return [gcd, lcm];
+}
+```
+
+### 03. 다른 풀이: 재귀 함수를 활용
+```
+function solution(n, m) {
+    function gcd(a, b) {
+        return b === 0 ? a : gcd(a, b % a);
+    }
+
+    const g = gcd(n, m);
+    return [g, (n * m) / g];
+}
+```
+- 재귀 깊이가 깊어지면 스택 오버플로우 가능성이 있다.
+- 물론 이 문제는 입력이 최대 1,000,000이라 실제로는 문제 없다.
+
+### 04. 사전 지식
+- 유클리드 호제법 원리: $A$를 $B$로 나눈 나머지를 $R$이라고 할 때, $A$와 $B$의 최대공약수는 $B$와 $R$의 최대공약수와 같다. 이 과정을 나머지가 0이 될 때까지 반복하는 방법이다.
