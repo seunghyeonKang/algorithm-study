@@ -76,3 +76,43 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 Code Review 📌
+
+### 01. 기존 풀이
+```
+function solution(d, budget) {
+    d.sort((a, b) => a - b);
+    let count = 0;
+    for (let i = 0; i < d.length; i++) {
+        budget -= d[i];
+        if (budget >= 0) count++;
+    }
+    return count;
+}
+```
+
+### 02. 개선 방향: 조기 탈출 추가
+```
+function solution(d, budget) {
+    d.sort((a, b) => a - b);
+    let count = 0;
+    
+    for (let i = 0; i < d.length; i++) {
+        budget -= d[i];
+        if (budget < 0) break;
+        count++;
+    }
+    
+    return count;
+}
+```
+
+### 03. 다른 풀이: `redece()` 활용
+```
+function solution(d, budget) {
+    return d.sort((a, b) => a - b).reduce((count, price) => {
+        return count + ((budget -= price) >= 0);
+    }, 0);
+}
+```
