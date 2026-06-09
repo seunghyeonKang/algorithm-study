@@ -81,3 +81,61 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 Code Review 📌
+
+### 01. 기존 풀이
+```
+function solution(number) {
+    let count = 0;
+    
+    for (let i = 0; i < number.length - 2; i++) {
+        for (let j = i + 1; j < number.length - 1; j++) {
+            for (let k = j + 1; k < number.length; k++) {
+                if (number[i] + number[j] + number[k] === 0) count++;
+            }
+        }
+    }
+    
+    return count;
+}
+```
+
+### 02. 개선 방향: 재귀(DFS) 형태의 조합 함수
+```
+function solution(number) {
+    let count = 0;
+
+    function combine(index, currentSum, depth) {
+        // 3명을 모두 뽑았을 때
+        if (depth === 3) {
+            if (currentSum === 0) count++;
+            return;
+        }
+        // 배열 끝까지 탐색했을 때
+        if (index === number.length) return;
+
+        // 현재 학생을 포함하는 경우
+        combine(index + 1, currentSum + number[index], depth + 1);
+        // 현재 학생을 포함하지 않는 경우
+        combine(index + 1, currentSum, depth);
+    }
+
+    combine(0, 0, 0);
+    return count;
+}
+```
+→ 확장 가능성이 좋다.
+
+### 03. 다른 풀이: `reduce` 메서드를 활용한 숏코딩
+```
+function solution(number) {
+    return number.reduce((acc, v, i) => 
+        acc + number.slice(i + 1).reduce((acc2, w, j) => 
+            acc2 + number.slice(i + j + 2).filter(x => v + w + x === 0).length, 0)
+    , 0);
+}
+```
+
+### 04. 사전 지식
+- `DFS` (`Depth-First Search`, 깊이 우선 탐색): 그래프나 트리를 탐색하는 알고리즘 중 하나. 한 방향으로 끝까지 파고든 뒤, 되돌아오며 다른 경로를 탐색하는 방식이다.
