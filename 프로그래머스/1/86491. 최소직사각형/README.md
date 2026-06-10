@@ -109,3 +109,54 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 Code Review 📌
+
+### 01. 기존 풀이
+```
+function solution(sizes) {
+    let sortedSizes = sizes.map((size) => size.sort((a, b) => a - b));
+    
+    let { height, width } = sortedSizes.reduce((acc, curr) => {
+        let h = acc.height <= curr[0] ? curr[0] : acc.height;
+        let w = acc.width <= curr[1] ? curr[1] : acc.width;
+        return { height: h, width: w };
+    }, { height: 0, width: 0 })
+    
+    return height * width;
+}
+```
+- `size.sort()`는 원본 배열을 변경하므로 스프레드 연산자`[...size]`로 복사하여 원본 불변을 지키자.
+- 변수명을 `maxW`, `maxH` 등 직관적으로 수정하자.
+- `Math.max()`로 더 간결하게 표현이 가능하다.
+
+### 02. 개선 방향: 기존 풀이 기반으로 `Math.max()`를 활용하여 리팩토링
+```
+function solution(sizes) {
+    const [maxW, maxH] = sizes.reduce(
+        ([maxW, maxH], [a, b]) => [
+            Math.max(maxW, Math.max(a, b)),
+            Math.max(maxH, Math.min(a, b))
+        ],
+        [0, 0]
+    );
+
+    return maxW * maxH;
+}
+```
+
+### 03. 개선 방향: 가독성 개선
+```
+function solution(sizes) {
+    let maxW = 0, maxH = 0;
+
+    for (const [a, b] of sizes) {
+        const w = Math.min(a, b);
+        const h = Math.max(a, b);
+        maxW = Math.max(maxW, w);
+        maxH = Math.max(maxH, h);
+    }
+
+    return maxW * maxH;
+}
+```
