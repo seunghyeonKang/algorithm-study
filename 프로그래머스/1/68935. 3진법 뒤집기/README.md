@@ -105,3 +105,38 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 Code Review 📌
+
+### 01. 기존 풀이
+```
+function solution(n) {
+    return parseInt(n.toString(3).split("").reverse().join(""), 3);
+}
+```
+
+### 02. 개선 방향: 구조 분해 할당 활용
+```
+const solution = (n) => {
+    return parseInt([...n.toString(3)].reverse().join(""), 3);
+}
+```
+- 현재 문제 상으로는 기능 차이가 없으며, 오히려 `split("")`가 성능상 아주 조금 빠르다.
+- 다만 최근 자바스크립트(ES6+)에서는 문자열을 배열로 만들 때, 이모지나 외국어 처리를 할 때 깨짐 없이 인식하기 때문에, `split("")`보다 구조 분해 할당을 활용한 `[...]` 방식을 더 세련되고 안전한 코드로 평가한다. 
+
+### 03. 다른 풀이: 수학적 풀이
+```
+function solution(n) {
+    let answer = 0;
+    while (n > 0) {
+        answer = answer * 3 + (n % 3);
+        n = Math.floor(n / 3);
+    }
+    return answer;
+}
+```
+
+### 04. 사전 지식
+- 3진법: 오직 0, 1, 2 세 개의 숫자만 사용하여 수를 표현하며, 자릿수가 올라갈 때마다 값이 3배씩 커지는 수 체계
+- `n.toString(3)`: 10진수 숫자 `n`을 **3진법 형태의 문자열**로 변환하는 메서드
+- `parseInt(문자열, 3)`: 3진법 형태의 문자열을 읽어서 **다시 10진수 정수**로 변환하는 함수
