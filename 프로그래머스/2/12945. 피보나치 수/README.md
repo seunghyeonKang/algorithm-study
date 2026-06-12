@@ -68,3 +68,40 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 Code Review 📌
+
+### 01. 기존 풀이
+```javascript
+function solution(n) {
+    let funcArr = [0, 1];
+    for (let i = 2; i <= n; i++) {
+        funcArr.push((funcArr[i-1] + funcArr[i-2]) % 1234567);
+    }
+    return funcArr[n] % 1234567;
+}
+```
+- 마지막 줄의 `% 1234567`이 불필요하다.
+- 배열 대신 변수 2개만 사용하면 공간복잡도가 $O(n)$에서 $O(1)$로 줄일 수 있다.
+
+### 02. 개선 방향: 기존 코드 리팩도링
+```javascript
+function solution(n) {
+    let a = 0; 
+    let b = 1;
+    
+    for (let i = 2; i <= n; i++) {
+        let sum = (a + b) % 1234567;
+        a = b;
+        b = sum;
+    }
+    
+    return b;
+}
+```
+
+### 03. 사전 지식
+- 자바스크립트에서 안전하게 연산할 수 있는 최대 정수는 약 9000조($9 \times 10^{15}$)까지이다.
+- 중간에 계속 `%` 연산을 적용해도 최종 결과는 변하지 않는다.
+
+  `(A + B) % M = ((A % M) + (B % M)) % M`
