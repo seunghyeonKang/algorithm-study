@@ -82,3 +82,49 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 Code Review 📌
+
+### 01. 기존 풀이
+```javascript
+function solution(numbers) {
+    numbers.sort((a, b) => a - b);
+    
+    const sumArr = [];
+    for (let i = 0; i < numbers.length - 1; i++) {
+        for (let j = i + 1; j < numbers.length; j++) {
+            sumArr.push(numbers[i] + numbers[j]);
+        }
+    }
+    sumArr.sort((a, b) => a - b);
+    
+    const answer = [];
+    let temp = -1;
+    for (let char of sumArr) {
+        if (char !== temp) answer.push(char);
+        temp = char;
+    }
+    return answer;
+}
+```
+- `numbers.sort`로 미리 정렬하여 나중에 더 큰 배열의 정렬 속도를 높였다.
+- `Set` 객체를 활용하여 중복 제거할 수 있다.
+- `temp` 초기값을 `undefined`로 설정하여 더 안전하게 변경하자.
+
+### 02. 다른 풀이: `Set` 활용
+```javascript
+function solution(numbers) {
+    const sumSet = new Set();
+    
+    for (let i = 0; i < numbers.length - 1; i++) {
+        for (let j = i + 1; j < numbers.length; j++) {
+            sumSet.add(numbers[i] + numbers[j]);
+        }
+    }
+    
+    return [...sumSet].sort((a, b) => a - b);
+}
+```
+
+### 03. 사전 지식
+- `Set`: 중복을 허용하지 않는 값의 집합을 저장하는 자료구조
