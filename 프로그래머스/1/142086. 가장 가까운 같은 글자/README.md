@@ -79,3 +79,48 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 Code Review 📌
+
+### 01. 기존 풀이
+```javascript
+function solution(s) {
+    let sArr = s.split("");
+    return sArr.map((char, i) => {
+        if (sArr.indexOf(char) === i) return -1;
+        let temp = sArr.indexOf(char);
+        sArr[temp] = 0;
+        return i - temp;
+    })
+}
+```
+- 시간복잡도가 $O(N^2)$이다. 해시 맵(객체)을 활용하여 개선하자.
+
+### 02. 개선 방향: 객체 활용
+```javascript
+function solution(s) {
+    const lastSeen = {}; // 각 글자의 마지막 인덱스를 저장할 객체
+    const result = [];
+
+    for (let i = 0; i < s.length; i++) {
+        const char = s[i];
+
+        // 이미 나온 적이 있는 글자라면
+        if (lastSeen[char] !== undefined) {
+            result.push(i - lastSeen[char]);
+        } else {
+            // 처음 등장하는 글자라면
+            result.push(-1);
+        }
+
+        // 현재 글자의 위치를 최신화
+        lastSeen[char] = i;
+    }
+
+    return result;
+}
+```
+
+### 03. 사전 지식
+- `obj.key (점 표기법)`: 내가 바꾸거나 찾으려는 키의 이름을 정확히 알고 있고, 평범한 문자열일 때 기본적으로 사용한다.
+- `obj[key] (대괄호 표기법)`: 앞선 알고리즘 문제처럼 `char`나 `i` 같은 변수 안의 값에 따라 매번 찾아야 하는 키가 바뀔 때(동적일 때) 필수적으로 사용한다.
