@@ -78,3 +78,66 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 Code Review 📌
+
+### 01. 기존 풀이
+```javascript
+function solution(food) {
+    const foodList = []; // 각 음식별 배치 개수
+    
+    for (let i = 1; i < food.length; i++) {
+        foodList[i - 1] = Math.floor(food[i] / 2);
+    }
+    
+    const answerList = []; // 배치된 음식 배열
+    for (let i = 0; i < foodList.length; i++) {
+        for (let j = 0; j < foodList[i]; j++) {
+            answerList.push(i + 1);
+        }
+    }
+    const leftString = answerList.join("");
+    const rightString = answerList.reverse().join("");
+    
+    return `${leftString}0${rightString}`;
+}
+```
+- `reverse()`는 원본을 수정하므로 `[...answerList]`로 복사본을 만들어 원본을 보호하자.
+
+### 02. 개선 방향: 기존 코드 리팩토링
+```javascript
+function solution(food) {
+    const answerList = [];
+    
+    for (let i = 1; i < food.length; i++) {
+        const count = Math.floor(food[i] / 2);
+        for (let j = 0; j < count; j++) {
+            answerList.push(i);
+        }
+    }
+    
+    const leftString = answerList.join("");
+    const rightString = [...answerList].reverse().join(""); 
+    
+    return `${leftString}0${rightString}`;
+}
+```
+
+### 03. 다른 풀이: `repeat()` 활용
+```javascript
+function solution(food) {
+    let leftString = "";
+    
+    for (let i = 1; i < food.length; i++) {
+        const count = Math.floor(food[i] / 2);
+        leftString += String(i).repeat(count);
+    }
+    
+    const rightString = leftString.split("").reverse().join("");
+    
+    return `${leftString}0${rightString}`;
+}
+```
+
+### 04. 사전 지식
+- `String.prototype.repeat(count)`: 주어진 문자열을 지정한 횟수(count)만큼 반복해 연결한 새로운 문자열을 반환하는 메서드
