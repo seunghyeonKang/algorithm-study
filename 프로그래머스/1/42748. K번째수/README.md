@@ -64,3 +64,28 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 Code Review 📌
+
+### 01. 기존 풀이
+```javascript
+function solution(array, commands) {
+    let answer = [];
+    
+    for (let command of commands) {
+        const sortedArray = array.slice(command[0] - 1, command[1]).sort((a, b) => a - b);
+        answer.push(sortedArray[command[2] - 1]);
+    }
+    
+    return answer;
+}
+```
+
+### 02. 개선 방향: 구조 분해 할당과 `map` 활용
+```javascript
+function solution(array, commands) {
+    return commands.map(([i, j, k]) => 
+        array.slice(i - 1, j).sort((a, b) => a - b)[k - 1]
+    );
+}
+```
