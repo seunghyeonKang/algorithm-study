@@ -66,3 +66,63 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 Code Review 📌
+
+### 00. 기존 풀이: 시간초과
+```javascript
+function solution(s)
+{
+    const deleteCouple = (str) => {
+        if (str === "") return 1;
+        for (let i = 0; i < str.length; i++) {
+            if (str[i] === str[i + 1]) return deleteCouple(str.slice(0, i) + str.slice(i + 2));
+        }
+        return 0;
+    }
+    
+    return deleteCouple(s);
+}
+```
+- 전체 시간 복잡도가 $O(N^2)$에 가깝기에 "시간 초과"와 "런타임 에러(Stack Overflow)"가 난다.
+
+### 01. 기존 풀이
+```javascript
+function solution(s) {
+    const alpStack = [];
+    
+    for (let i = 0; i < s.length; i++) {
+        const temp = alpStack.pop();
+        if (temp === undefined) {
+            alpStack.push(s[i]);
+        } else if (temp !== s[i]) {
+            alpStack.push(temp);
+            alpStack.push(s[i]);
+        }
+    }
+    
+    if (alpStack.length === 0) return 1;
+    else return 0;
+}
+```
+- 먼저 값을 빼는(pop) 것 대신, 스택의 맨 위 값을 확인만(peek) 하고 조건이 맞을 때 빼는 것이 훨씬 안전하고 직관적이다.
+
+### 02. 개선 방향: 기존 코드 리팩토링
+```javascript
+function solution(s) {
+    const stack = [];
+    
+    for (const char of s) {
+        if (stack.length > 0 && stack[stack.length - 1] === char) {
+            stack.pop();
+        } else {
+            stack.push(char);
+        }
+    }
+    
+    return stack.length === 0 ? 1 : 0;
+}
+```
+
+### 03. 사전 지식
+- `includes()`: 값이 포함되어 있으면 `true`, 없으면 `false`를 반환한다.
