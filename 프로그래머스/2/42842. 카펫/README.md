@@ -68,3 +68,35 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 Code Review 📌
+
+### 01. 기존 풀이
+```javascript
+function solution(brown, yellow) {
+    let h = 1;
+    while (true) {
+        const w = (brown + 4) / 2 - h;
+        if (yellow === (w - 2) * (h - 2)) break;
+        h++;
+    }
+    return [(brown + 4) / 2 - h, h];
+}
+```
+- 노란색 격자가 최소 1개 이상이므로 세로 길이는 최소 3 이상이다.
+- `(brown + 4) / 2`의 중복 계산을 변수로 저장하여 줄이자.
+- 무한루프 가능성을 없애는 습관을 가지자.
+
+### 02. 개선 방향: 기존 코드 리팩토링
+```javascript
+function solution(brown, yellow) {
+    const sum = (brown + 4) / 2; // w + h
+    
+    for (let h = 3; h * 2 <= sum; h++) {
+        const w = sum - h;
+        if (yellow === (w - 2) * (h - 2)) {
+            return [w, h];
+        }
+    }
+}
+```
