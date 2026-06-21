@@ -95,3 +95,54 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 Code Review 📌
+
+### 01. 기존 풀이
+```javascript
+function solution(a, b, n) {
+    let left = n;
+    let countGet = 0;
+    
+    while (true) {
+        if (left / a < 1) break;
+        
+        if (left % a === 0) {
+            countGet += (left / a) * b;
+            left = left / a * b;
+        } else {
+            countGet += Math.floor(left / a) * b;
+            left = left - Math.floor(left / a) * a + Math.floor(left / a) * b;
+        }
+    }
+    
+    return countGet;
+}
+```
+- `break` 조건을 무한 루프의 조건식으로 넣자.
+- 분기 처리(`if-else`)를 통합하자.
+
+### 02. 개선 방향: 기존 코드 리팩토링
+```javascript
+function solution(a, b, n) {
+    let left = n;
+    let countGet = 0;
+    
+    while (left >= a) {
+        let newCola = Math.floor(left / a) * b;
+        let remainBottles = left % a;
+        
+        countGet += newCola;
+        left = newCola + remainBottles;
+    }
+    
+    return countGet;
+}
+```
+
+### 03. 다른 풀이: 수학적 접근법 ($O(1)$ 풀이)
+```javascript
+function solution(a, b, n) {
+    return Math.floor((n - b) / (a - b)) * b;
+}
+```
