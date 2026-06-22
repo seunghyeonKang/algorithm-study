@@ -62,3 +62,63 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 Code Review 📌
+
+### 01. 기존 풀이
+```javascript
+function solution(strings, n) {
+    let stringsObjs = [];
+    for (let i = 0; i < strings.length; i++) {
+        stringsObjs.push({
+            word: strings[i],
+            char: strings[i][n]
+        })
+    } // [{word: "sun", char: "u"}, {}, ...]
+    
+    stringsObjs.sort((a, b) => {
+        if (a.char.localeCompare(b.char) === 0) return a.word.localeCompare(b.word);
+        else return a.char.localeCompare(b.char);
+    }); // 정렬
+    
+    let sortedStrings = [];
+    for (let i = 0; i < stringsObjs.length; i++) {
+        sortedStrings.push(stringsObjs[i].word)
+    }
+    return sortedStrings;
+}
+```
+
+### 02. 개선 방향: `map`을 활용하여 기존 코드 리팩토링
+```javascript
+function solution(strings, n) {
+    return strings
+        // 1. 객체 배열로 변환
+        .map(word => ({ word, char: word[n] }))
+        // 2. n번째 글자 기준 정렬 (같으면 단어 기준)
+        .sort((a, b) => {
+            if (a.char === b.char) return a.word.localeCompare(b.word);
+            return a.char.localeCompare(b.char);
+        })
+        // 3. 단어만 추출해서 배열로 반환
+        .map(obj => obj.word);
+}
+```
+
+### 03. 다른 풀이: 객체 변환 없이 바로 정렬하기
+```javascript
+function solution(strings, n) {
+    return strings.sort((a, b) => {
+        if (a[n] === b[n]) return a.localeCompare(b);
+        return a[n].localeCompare(b[n]);
+    });
+}
+```
+
+### 04. 사전 지식
+- JavaScript에서 `arr[1]`처럼 존재하지 않는 인덱스에 접근하면 `undefined`를 반환한다.
+- `sort()` 메서드 안의 콜백 함수에서 조건문을 활용하면 여러 단계의 정렬 기준을 세울 수 있다.
+- `a.localeCompare(b)`는 문자열 `a`와 `b`를 비교하여 다음과 같은 숫자를 반환한다는 성질을 정렬에 적용한다.
+  - `a < b` 이면 음수 (-1) -> `a`를 앞으로
+  - `a > b` 이면 양수 (1) -> `b`를 앞으로
+  - `a === b` 이면 0 -> 순서 유지
