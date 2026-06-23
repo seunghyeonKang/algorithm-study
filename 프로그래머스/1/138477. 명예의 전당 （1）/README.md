@@ -80,3 +80,50 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 Code Review 📌
+
+### 01. 기존 풀이
+```javascript
+function solution(k, score) {
+    let tops = []; // 명예의 전당 k명의 배열
+    let lastTops = []; // 최하위 점수의 기록 배열
+    
+    for (let num of score) {
+        if (tops.length < k) {
+            tops.push(num);
+            tops.sort((a, b) => b - a);
+            lastTops.push(tops[tops.length - 1]);
+        } else if (tops[k - 1] < num) {
+            tops[k - 1] = num;
+            tops.sort((a, b) => b - a);
+            lastTops.push(tops[k - 1]);
+        } else {
+            lastTops.push(tops[k - 1]);
+        }
+    }
+    
+    return lastTops;
+}
+```
+
+### 02. 다른 풀이: `pop()` 활용하여 가독성 개선 (성능은 기존 코드가 우수)
+```javascript
+function solution(k, score) {
+    let tops = [];
+    let lastTops = [];
+    
+    for (let num of score) {
+        tops.push(num);
+        tops.sort((a, b) => b - a);
+        
+        if (tops.length > k) {
+            tops.pop();
+        }
+        
+        lastTops.push(tops[tops.length - 1]);
+    }
+    
+    return lastTops;
+}
+```
