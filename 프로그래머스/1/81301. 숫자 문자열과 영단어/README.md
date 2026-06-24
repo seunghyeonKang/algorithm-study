@@ -158,3 +158,124 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 Code Review 📌
+
+### 01. 기존 풀이
+```javascript
+function solution(s) {
+    let numArr = [];
+    let temp = s;
+    
+    while (temp !== "") {
+        if (Number(temp[0]) >= 0) { // 숫자인 경우
+            numArr.push(temp[0]);
+            temp = temp.slice(1);
+        } else if (temp[0] === "z") {
+            numArr.push("0");
+            temp = temp.slice(4);
+        } else if (temp[0] === "o") {
+            numArr.push("1");
+            temp = temp.slice(3);
+        } else if (temp[0] === "t") {
+            if (temp[1] === "w") {
+                numArr.push("2");
+                temp = temp.slice(3);
+            } else {
+                numArr.push("3");
+                temp = temp.slice(5);
+            }
+        } else if (temp[0] === "f") {
+            if (temp[1] === "o") {
+                numArr.push("4");
+                temp = temp.slice(4);
+            } else {
+                numArr.push("5");
+                temp = temp.slice(4);
+            }
+        } else if (temp[0] === "s") {
+            if (temp[1] === "i") {
+                numArr.push("6");
+                temp = temp.slice(3);
+            } else {
+                numArr.push("7");
+                temp = temp.slice(5);
+            }
+        } else if (temp[0] === "e") {
+            numArr.push("8");
+            temp = temp.slice(5);
+        } else {
+            numArr.push("9");
+            temp = temp.slice(4);
+        }
+    }
+    
+    return Number(numArr.join(""));
+}
+```
+
+### 02. 개선 방향: `startsWith()` 활용
+```javascript
+function solution(s) {
+    const wordToNum = {
+        zero: '0', one: '1', two: '2', three: '3', four: '4',
+        five: '5', six: '6', seven: '7', eight: '8', nine: '9'
+    };
+    
+    let result = '';
+    let i = 0;
+    
+    while (i < s.length) {
+        if (s[i] >= '0' && s[i] <= '9') {
+            result += s[i];
+            i += 1;
+        } else {
+            for (const word in wordToNum) {
+                if (s.startsWith(word, i)) {
+                    result += wordToNum[word];
+                    i += word.length;
+                    break;
+                }
+            }
+        }
+    }
+    
+    return Number(result);
+}
+```
+
+### 03. 다른 풀이: `forEach`, `split`, `join` 활용
+```javascript
+function solution(s) {
+    const words = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
+    
+    words.forEach((word, index) => {
+        s = s.split(word).join(index);
+    });
+    
+    return Number(s);
+}
+```
+
+### 04. 다른 풀이: `replace`, 정규표현식과 객체 활용
+```javascript
+function solution(s) {
+    const charMap = {
+        "zero": 0, "one": 1, "two": 2, "three": 3, "four": 4,
+        "five": 5, "six": 6, "seven": 7, "eight": 8, "nine": 9
+    };
+    
+    for (let word in charMap) {
+        s = s.replace(new RegExp(word, 'g'), charMap[word]);
+    }
+    
+    return Number(s);
+}
+```
+
+### 05. 사전 지식
+- `str.startsWith(searchString, position)`: 문자열이 특정 문자열로 시작하는지 확인해서 `true` 또는 `false`를 반환하는 메서드
+- `RegExp`: 문자열에서 특정 패턴을 찾거나, 검사하거나, 치환할 때 사용하는 정규표현식(정규식)을 다루는 객체
+- `match()`: 문자열에서 정규표현식과 일치하는 부분을 찾아 그 결과를 배열로 반환하는 메서드
+- `forEach()`: 배열의 각 요소에 대해 주어진 함수를 순서대로 한 번씩 실행하는 메서드
+- `replace()`: 문자열에서 특정 패턴이나 문자열을 찾아 다른 문자열로 바꿔주는 메서드
