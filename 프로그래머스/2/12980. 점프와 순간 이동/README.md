@@ -74,3 +74,41 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 Code Review 📌
+
+### 01. 기존 풀이
+```javascript
+function solution(n) {
+    let countOne = 0;
+    
+    while (n > 0) {
+        if (n % 2 !== 0) countOne++;
+        n = Math.floor(n / 2);
+    }
+
+    return countOne;
+}
+```
+
+### 02. 개선 방향: 비트 연산자 활용하기
+```javascript
+function solution(n) {
+    let countOne = 0;
+    
+    while (n > 0) {
+        countOne += (n & 1); // 가장 오른쪽 비트가 1인지 확인 (홀수면 1 더함)
+        n = n >> 1;          // 오른쪽으로 1비트 이동 (2로 나누고 내림하는 것과 동일)
+    }
+
+    return countOne;
+}
+```
+
+### 03. 다른 풀이: 2진수 변환 활용하기 (`toString(2)`)
+```javascript
+function solution(n) {
+    // 2진수로 변환 후 '0'을 모두 제거한 문자열의 길이를 반환
+    return n.toString(2).replace(/0/g, '').length;
+}
+```
