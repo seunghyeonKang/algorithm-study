@@ -86,3 +86,129 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 Code Review 📌
+
+### 01. 기존 풀이
+```javascript
+function solution(k, tangerine) {
+    let sizeNumObj = {};
+    for (const size of tangerine) {
+        if (sizeNumObj[size] > 0) sizeNumObj[size]++;
+        else sizeNumObj[size] = 1;
+    }
+    
+    let numList = [];
+    for (const size in sizeNumObj) {
+        numList.push(sizeNumObj[size]);
+    }
+    numList.sort((a, b) => b - a);
+    
+    let total = 0;
+    let answer;
+    for (let i = 0; i < numList.length; i++) {
+        total += numList[i];
+        
+        if (total >= k ) {
+            answer = i + 1;
+            break;
+        }
+    }
+    return answer;
+}
+```
+- `Object.values()`로 가독성을 높이자.
+- `answer` 변수를 만들지 말고 반복문 안에서 바로 `return`하자.
+
+### 02. 개선 방향: 기존 코드 리팩토링
+```javascript
+function solution(k, tangerine) {
+    // 1. 크기별 귤의 개수 세기
+    let sizeNumObj = {};
+    for (const size of tangerine) {
+        sizeNumObj[size] = (sizeNumObj[size] || 0) + 1;
+    }
+    
+    // 2. 귤의 개수만 뽑아서 내림차순 정렬하기
+    let numList = Object.values(sizeNumObj).sort((a, b) => b - a);
+    
+    // 3. 가장 많은 귤부터 박스에 담기
+    let total = 0;
+    for (let i = 0; i < numList.length; i++) {
+        total += numList[i];
+        
+        // k개를 채우는 순간, 사용된 귤 종류의 수(인덱스 + 1)를 바로 반환
+        if (total >= k) {
+            return i + 1;
+        }
+    }
+}
+```
+
+### 03. 다른 풀이: `Map` 자료구조 활용
+```javascript
+function solution(k, tangerine) {
+    const sizeMap = new Map();
+    
+    // 1. Map을 사용해 귤 개수 세기 (일반 객체보다 미세하게 빠름)
+    for (const size of tangerine) {
+        sizeMap.set(size, (sizeMap.get(size) || 0) + 1);
+    }
+    
+    // 2. 값(개수)들만 모아서 내림차순 정렬
+    const sortedCounts = [...sizeMap.values()].sort((a, b) => b - a);
+    
+    // 3. k에서 가장 많은 귤 개수를 빼나가는 방식
+    let answer = 0;
+    for (const count of sortedCounts) {
+        k -= count;
+        answer++;
+        if (k <= 0) break; // k를 모두 채웠다면(0 이하가 되면) 종료
+    }
+    
+    return answer;
+}
+```
+
+### 04. 다른 풀이: 데이터가 많아 속도가 중요할 경우 계수 정렬(Counting Sort) 개념 도입
+```javascript
+function solution(k, tangerine) {
+    const sizeMap = new Map();
+    let maxCount = 0;
+
+    // 1. 빈도수를 구하면서, 한 종류가 가질 수 있는 최대 개수(maxCount)를 찾는다.
+    for (const size of tangerine) {
+        const count = (sizeMap.get(size) || 0) + 1;
+        sizeMap.set(size, count);
+        if (count > maxCount) maxCount = count;
+    }
+
+    // 2. '귤의 개수'를 인덱스로 하는 빈도수 배열 생성 (Counting Array)
+    // 귤 개수가 많은 것부터 접근하기 위해 maxCount + 1 크기로 만든다.
+    const freq = new Array(maxCount + 1).fill(0);
+    for (const count of sizeMap.values()) {
+        freq[count]++;
+    }
+
+    // 3. 역방향으로 순회하며 k를 채운다. (정렬을 안 하므로 O(N) 가능)
+    let answer = 0;
+    for (let c = maxCount; c > 0; c--) {
+        if (freq[c] === 0) continue;
+
+        // c개를 가진 귤 종류가 여러 개(freq[c]개) 있을 수 있으므로 반복 처리
+        while (freq[c] > 0 && k > 0) {
+            k -= c;
+            freq[c]--;
+            answer++;
+        }
+        
+        if (k <= 0) break;
+    }
+
+    return answer;
+}
+```
+
+### 05. 사전 지식
+- `Object.values(obj)`: 객체의 값(value)들만 모아서 배열로 반환하는 메서드
+- `new Map()`: 키-값 쌍을 저장하는 자료구조로, 일반 객체(`{}`)와 비슷하지만 키로 어떤 타입이든 쓸 수 있고 입력한 순서가 보장되는 컬렉션
