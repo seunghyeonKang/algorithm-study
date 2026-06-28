@@ -63,3 +63,70 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 Code Review 📌
+
+### 00. 기존 풀이: 효율성  테스트 실패
+```javascript
+function solution(people, limit) {
+    let temp = [...people].sort((a, b) => b - a);
+    let answer = 0;
+    
+    for (answer = 0; temp.length > 0; answer++) {
+        // 맨 앞과 맨 뒤 조합 -> 안 되면 맨 앞 한 명만 탈출
+        if (temp[0] + temp[temp.length - 1] <= limit) {
+            temp = temp.slice(1);
+            temp.pop();
+        } else {
+            temp = temp.slice(1);
+        }
+    }
+    
+    return answer;
+}
+```
+- `slice()`나 `shift()`는 $O(N)$이며, `for`문이 최대 $N$번 반복되므로, 전체 시간 복잡도는 $O(N^2)$이 된다.
+
+### 01. 기존 풀이: 효율성  테스트 통과
+```javascript
+function solution(people, limit) {
+    people.sort((a, b) => b - a);
+    let answer = 0;
+    let left = 0;
+    let right = people.length - 1;
+    
+    while (left <= right) {
+        if (people[left] + people[right] <= limit) {
+            right--; 
+        }
+        left++;
+        answer++;
+    }
+    
+    return answer;
+}
+```
+- `if - else` 문의 공통 연산은 밖으로 빼자.
+- `a`, `b` 대신 `left`, `right`나 `light`, `heavy`로 변수명을 바꾸면 더 직관적이다.
+
+### 02. 개선 방향: 기존 코드 리팩토링
+```javascript
+function solution(people, limit) {
+    people.sort((a, b) => a - b);
+    
+    let answer = 0;
+    let left = 0;
+    let right = people.length - 1;
+    
+    while (left <= right) {
+        if (people[left] + people[right] <= limit) {
+            left++;
+        }
+        
+        right--; 
+        answer++;
+    }
+    
+    return answer;
+}
+```
