@@ -92,3 +92,47 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 Code Review 📌
+
+### 01. 기존 풀이
+```javascript
+function solution(cards1, cards2, goal) {
+    let temp1 = 0;
+    let temp2 = 0;
+    
+    for (let i = 0; i < goal.length; i++) {
+        if (goal[i] === cards1[temp1]) temp1++;
+        else if (goal[i] === cards2[temp2]) temp2++;
+        else return "No";
+    }
+    return "Yes";
+}
+```
+- 변수명을 `temp`에서 `idx`나 `p`(Pointer)로 변경하여 가독성을 향상시키자.
+- 배열의 인덱스를 초과해 접근하면 `undefined`를 반환한다. JS 특성상 `goal[i] === undefined`를 비교하게 되어 정상 동작하지만 안전장치를 만드는 습관을 기르자.
+- $O(goal.length)$ — 각 단어마다 $O(1)$ 비교만 하므로 효율적이다.
+
+### 02. 개선 방향: 기존 코드 리팩토링
+```javascript
+function solution(cards1, cards2, goal) {
+    let idx1 = 0;
+    let idx2 = 0;
+    
+    for (let i = 0; i < goal.length; i++) {
+        const word = goal[i];
+        
+        if (idx1 < cards1.length && word === cards1[idx1]) {
+            idx1++;
+        } 
+        else if (idx2 < cards2.length && word === cards2[idx2]) {
+            idx2++;
+        } 
+        else {
+            return "No";
+        }
+    }
+    
+    return "Yes";
+}
+```
