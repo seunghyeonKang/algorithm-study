@@ -101,3 +101,59 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 Code Review 📌
+
+### 01. 기존 풀이
+```javascript
+function solution(n, arr1, arr2) {
+    return Array(n).fill("").map((_, i) => {
+        let solvedString = "";
+        for (let j = 1; j <= n; j++) {
+            if (arr1[i] % 2 || arr2[i] % 2) solvedString += "#";
+            else solvedString += " ";
+            arr1[i] >>= 1;
+            arr2[i] >>= 1;
+        }
+        return solvedString.split("").reverse().join("");
+    });
+}
+```
+- 원본 배열을 직접 변경하는 것을 지양하자.
+- 비트 논리합(OR) 연산자를 활용해보자.
+
+### 02. 개선 방향: 기존 코드 리팩토링
+```javascript
+function solution(n, arr1, arr2) {
+    return Array(n).fill("").map((_, i) => {
+        let combined = arr1[i] | arr2[i];
+        let solvedString = "";
+        
+        for (let j = 0; j < n; j++) {
+            if (combined % 2 === 1) solvedString = "#" + solvedString;
+            else solvedString = " " + solvedString;
+            
+            combined >>= 1;
+        }
+        return solvedString;
+    });
+}
+```
+
+### 03. 다른 풀이: JavaScript의 내장 함수 활용
+```javascript
+function solution(n, arr1, arr2) {
+    return arr1.map((v, i) => {
+        return (v | arr2[i])          // OR 연산으로 두 지도 합치기
+            .toString(2)              // 이진수 문자열로 변환
+            .padStart(n, "0")         // n 자리로 앞을 0으로 채우기
+            .replace(/1/g, "#")       // 1 → "#"
+            .replace(/0/g, " ");      // 0 → " "
+    });
+}
+```
+
+### 04. 사전 지식
+- `Array(n).fill("")`: 길이가 `n`인 빈 배열을 생성하고, 모든 요소를 빈 문자열(`""`)로 초기화(채우기)하는 코드
+- `.padStart(n, '0')`: 자바스크립트의 문자열 메서드로, 현재 문자열의 길이가 `n`보다 짧을 경우, 목표 길이에 도달할 때까지 문자열의 '시작 부분(앞쪽)'을 특정 문자(`'0'`)로 채워주는 함수
+- `.replace(/1/g, "#")`: 문자열에서 바꾸고 싶은 특정 문자(또는 정규표현식)를 찾아 다른 문자로 치환(변경)해주는 메서드
