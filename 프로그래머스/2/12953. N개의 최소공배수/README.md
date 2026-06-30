@@ -1,3 +1,4 @@
+
 # [level 2] N개의 최소공배수 - 12953 
 
 [문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/12953) 
@@ -48,3 +49,41 @@
       </table>
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 Code Review 📌
+
+### 01. 기존 풀이
+```javascript
+function solution(arr) {
+    let numList = [...arr].sort((a, b) => b - a);
+    let max = numList[0];
+    
+    let answer = 0;
+    let i = 1;
+    while (answer === 0) {
+        for (let j = 1; j < numList.length ; j++) {
+            if (max * i % numList[j] !== 0) break;
+            if (j === numList.length - 1) answer = max * i;
+        }
+        i++;
+    }
+    
+    return answer;
+}
+```
+- 배열의 길이가 1일 때 무한 루프 위험이 있다.
+- 유클리드 호제법을 활용하여 효율성(시간 복잡도)을 높이자.
+
+### 02. 개선 방향: 유클리드 호제법 활용
+```javascript
+function solution(arr) {
+    // 최대공약수(GCD)를 구하는 함수 (유클리드 호제법)
+    const gcd = (a, b) => b === 0 ? a : gcd(b, a % b);
+    
+    // 최소공배수(LCM)를 구하는 함수
+    const lcm = (a, b) => (a * b) / gcd(a, b);
+
+    // reduce를 이용해 배열의 모든 수를 순회하며 최소공배수를 누적
+    return arr.reduce((acc, cur) => lcm(acc, cur));
+}
+```
