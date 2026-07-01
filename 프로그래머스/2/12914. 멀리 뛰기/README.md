@@ -64,3 +64,51 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 Code Review 📌
+
+### 01. 힌트를 얻은 기존 풀이
+```javascript
+function solution(n) {
+    let firstNum = 1;
+    let secondNum = 1;
+    
+    for (let i = 2; i <= n; i++) {
+        const temp = firstNum + secondNum;
+        firstNum = secondNum;
+        secondNum = temp % 1234567;
+    }
+    
+    return secondNum;
+}
+```
+- **피보나치 수열**이라는 사실은 직접 알아내지 못했다.
+  - 작고 극단적인 수(Base Case)부터 나열해보자.
+
+    ```
+    n = 1 → 1
+    n = 2 → 2
+    n = 3 → 3
+    n = 4 → 5
+    n = 5 → 8
+    ```
+  - '마지막 단계'를 기준으로 사건을 쪼개어 DP(동적 계획법)식 사고를 해보자.
+
+     `n번째 칸에 가는 총 방법의 수 = (n-1)번째 칸까지 오는 방법의 수 + (n-2)번째 칸까지 오는 방법의 수`
+
+### 02. 개선 방향: 구조 분해 할당 활용
+```javascript
+function solution(n) {
+    let firstNum = 1;
+    let secondNum = 1;
+    
+    for (let i = 2; i <= n; i++) {
+        [firstNum, secondNum] = [secondNum, (firstNum + secondNum) % 1234567];
+    }
+    
+    return secondNum;
+}
+```
+
+### 03. 사전 지식
+- `DP(Dynamic Programming, 동적 계획법)`: 한 번 푼 문제는 배열 같은 곳에 기록(Memo)해 두고 꺼내 쓰는 알고리즘 설계 기법
