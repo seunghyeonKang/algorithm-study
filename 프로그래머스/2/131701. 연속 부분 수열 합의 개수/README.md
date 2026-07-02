@@ -65,3 +65,79 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 Code Review 📌
+
+### 01. 기존 풀이
+```javascript
+function solution(elements) {
+    let combineSet = new Set();
+    let loopElements = [...elements, ...elements];
+    
+    for (let arrLength = 1; arrLength <= elements.length; arrLength++) { // 부분 수열의 길이
+        for (let startIdx = 0; startIdx < elements.length; startIdx++) { // 부분 수열의 시작점
+            let sum = 0;
+            for (let i = 0; i < arrLength; i++) { // 부분 수열의 합 구하는 루프
+                sum += loopElements[startIdx + i];
+            }
+            combineSet.add(sum);
+        }
+    }
+    
+    return combineSet.size;
+}
+```
+- 3중 반복문 사용으로 인해 시간 복잡도가 $O(N^3)$이다.
+- '이전 길이에서 구한 합에 다음 원소 하나만 더하는 방식'으로 적용하면 2중 반복문으로 구현할 수 있다.
+
+### 02. 개선 방향: 위 힌트를 보고 수정한 풀이
+```javascript
+function solution(elements) {
+    let combineSet = new Set();
+    let loopElements = [...elements, ...elements];
+    
+    for (let startIdx = 0; startIdx < elements.length; startIdx++) { // 부분 수열의 시작점
+        let sum = 0;
+        for (let sumIdx = 0; sumIdx < elements.length; sumIdx++) {
+            // 해당 시작점의 모든 부분 수열의 합을 구하는 루프
+            sum += loopElements[startIdx + sumIdx];
+            combineSet.add(sum);
+        }
+    }
+    
+    return combineSet.size;
+}
+```
+→ 최대 시간이 `484.53ms`에서 `58.05ms`로 개선되었다.
+
+→ `const len = elements.length;`로 중복 코드를 없애보자.
+
+### 03. 사전 지식
+- `Set()`: 중복되지 않는 유일한 값들의 집합을 다루기 위한 특별한 객체
+  
+  ```javascript
+  // 1. Set 생성
+  const mySet = new Set();
+
+  // 2. 값 추가 (add)
+  mySet.add(1);
+  mySet.add(5);
+  mySet.add(5); // 중복된 값은 무시됨
+  mySet.add('텍스트');
+
+  console.log(mySet); // Set(3) { 1, 5, '텍스트' }
+
+  // 3. 값 존재 여부 확인 (has) - 매우 빠름!
+  console.log(mySet.has(5)); // true
+  console.log(mySet.has(10)); // false
+
+  // 4. 특정 값 삭제 (delete)
+  mySet.delete(5);
+
+  // 5. 총 요소 개수 확인 (size 프로퍼티 - length가 아님에 주의!)
+  console.log(mySet.size); // 2
+
+  // 6. 모든 값 제거 (clear)
+  mySet.clear();
+  console.log(mySet.size); // 0
+  ```
