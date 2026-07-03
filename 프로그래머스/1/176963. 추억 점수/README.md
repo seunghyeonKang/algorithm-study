@@ -97,3 +97,92 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 Code Review 📌
+
+### 00. 기존 풀이: 정확성에서 실패
+```javascript
+function solution(name, yearning, photo) {
+    const nameYearnObj = {};
+    name.forEach((oneName, i) => nameYearnObj[oneName] = yearning[i]);
+    
+    const photoScoreArr = [];
+    
+    photo.forEach((photoNameArr) => { // 사진 하나의 이름들
+        let regex = new RegExp(name.join("|"), "gi");
+        let yearningSum = 0; // 사진 하나의 점수의 합
+        
+        photoNameArr.forEach((onePhotoName, i) => {
+            let matchResult = onePhotoName.match(regex);
+            if (matchResult) yearningSum += nameYearnObj[matchResult[0]];
+        })
+        
+        photoScoreArr.push(yearningSum);
+    })
+    
+    return photoScoreArr;
+}
+```
+- 객체(Object) 생성에 대한 접근은 좋았지만, 정규식 도입으로 복잡해졌다.
+- 정규식은 '규칙이나 패턴'을 찾을 때 사용하고, 단어 대 단어의 100% 정확한 일치를 비교할 때는 지양하자.
+
+### 01. 기존 풀이: 정확성 성공
+```javascript
+function solution(name, yearning, photo) {
+    const photoScoreArr = []; // 결과 점수 배열
+    
+    photo.forEach((photoNameArr) => { // 사진 한 장의 이름들
+        let yearningSum = 0;
+        
+        photoNameArr.forEach((onePhotoName) => {
+            name.forEach((oneYearningName, i) => {
+                if (oneYearningName === onePhotoName) yearningSum += yearning[i];
+            })
+        })
+        
+        photoScoreArr.push(yearningSum);
+    })
+    
+    return photoScoreArr;
+}
+```
+- 정규식의 허점을 파악하고 단순 반복문으로 풀었다.
+- 정확성을 통과했지만 시간복잡도가 $O(P \times M \times N)$이기에 효율성이 좋지 않다.
+
+### 02. 개선 방향: `Map` 함수와 객체 활용
+```javascript
+function solution(name, yearning, photo) {
+    // 1. 이름과 점수를 매핑한 매핑 테이블(객체) 만들기
+    const scoreMap = {};
+    name.forEach((oneName, i) => {
+        scoreMap[oneName] = yearning[i];
+    });
+    
+    // 2. map 메서드를 사용해 각 사진의 점수를 바로 반환하기
+    return photo.map((photoNameArr) => {
+        let yearningSum = 0;
+        
+        photoNameArr.forEach((onePhotoName) => {
+            // 객체 안에 이름이 있으면(점수가 있으면) 더하고, 없으면 0을 더함
+            yearningSum += scoreMap[onePhotoName] || 0;
+        });
+        
+        return yearningSum;
+    });
+}
+```
+- 정규식 없이 사진 속 이름이 객체에 존재하면 점수를 더하는 방식으로 하면 시간 복잡도가 $O(N \times M)$로 빨라진다.
+
+### 03. 사전 지식
+- '100% 일치하는 데이터를 찾을 때나 `1:1` 변환할 때는 객체(Key-Value)나 `map()`을 활용하자.
+- `g` (Global): 전체 검색. 문자열 전체에서 일치하는 걸 전부 찾는다. (이게 없으면 첫 번째 하나만 찾고 끝난다.)
+- `i` (Ignore Case): 대소문자 무시. 대문자 A와 소문자 a를 구별하지 않고 똑같이 취급한다.
+- `new RegExp()`: 변수 안에 담긴 문자열을 정규식 패턴으로 쓰고 싶을 때는 반드시 `new RegExp()` 객체를 사용한다. (정규식 리터럴 방식에서는 변수를 사용하지 못한다.)
+  ```
+  const keywords = ['사과', '바나나', '포도'];
+  const regex = new RegExp(keywords.join('|'), 'gi');
+
+  const text = "마트에서 사과랑 포도를 샀는데, 바나나는 깜빡했어.";
+  const matches = text.match(regex);
+  // 출력 결과: ['사과', '포도', '바나나']
+  ```
