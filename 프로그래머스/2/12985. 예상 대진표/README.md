@@ -57,3 +57,52 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 Code Review 📌
+
+### 01. 기존 풀이
+```javascript
+function solution(n,a,b)
+{
+    let round = 1;
+    let aNum = a;
+    let bNum = b;
+    
+    while (2 ** round <= n) {
+        aNum = Math.ceil(aNum / 2);
+        bNum = Math.ceil(bNum / 2);
+        if (aNum === bNum) return round;
+        round++;
+    }
+    
+    return "exception";
+}
+```
+
+### 02. 개선 방향: 기존 코드 리팩토링
+```javascript
+function solution(n, a, b) {
+    let round = 0;
+    
+    while (a !== b) {
+        a = Math.ceil(a / 2);
+        b = Math.ceil(b / 2);
+        round++;
+    }
+    
+    return round;
+}
+```
+
+### 03. 다른 풀이: 비트 연산을 활용한 풀이 (XOR)
+```javascript
+function solution(n, a, b) {
+    // a-1과 b-1의 XOR 연산 결과에서 가장 큰 비트의 자릿수를 찾는다.
+    return ((a - 1) ^ (b - 1)).toString(2).length;
+}
+```
+- 가독성과 유지보수성의 면에서 `while`문을 활용한 풀이가 더 좋다.
+- `toString`과 `length` 때문에 연산 풀이가 더 느릴 수 있다.
+
+### 04. 사전 지식
+- `^` (XOR) 연산자: 서로 다를 때만 1(참)을 반환하는 비트 연산자
