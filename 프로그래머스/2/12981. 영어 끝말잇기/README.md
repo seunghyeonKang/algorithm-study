@@ -125,3 +125,64 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 Code Review 📌
+
+### 01. 기존 풀이
+```javascript
+function solution(n, words) {
+    const leng = words.length;
+    let wrongTurn = 0;
+    
+    for (let i = 0; i < leng - 1; i++) {
+        const wordsSliced = words.slice(0, i + 1);
+        let isMatch = wordsSliced.reduce((acc, curr) => words[i + 1] === curr ? 1 : acc, 0);
+        
+        if (words[i][words[i].length - 1] !== words[i + 1][0] || isMatch) {
+            wrongTurn = i + 2;
+            break;
+        }
+    }
+    
+    if (wrongTurn === 0) return [0, 0];
+    else return [wrongTurn % n ? wrongTurn % n : n, Math.ceil(wrongTurn / n)]
+}
+```
+- 중복 단어 체크 방식이 `slice`와 `reduce`를 활용하여 $O(N^2)$가 되기 때문에 비효율적이다.
+- `Set` 객체를 활용한다면 $O(1)$ 혹은 $O(N)$으로 해결 가능하다.
+
+### 02. 개선 방향: `Set()` 활용
+```javascript
+function solution(n, words) {
+    // 이미 등장한 단어들을 저장할 Set (조회 속도가 빠름)
+    const usedWords = new Set();
+    usedWords.add(words[0]);
+
+    for (let i = 1; i < words.length; i++) {
+        const prevWord = words[i - 1];
+        const currWord = words[i];
+
+        // 조건 1: 앞사람이 말한 단어의 마지막 문자로 시작하는지 확인
+        const isWrongRule = prevWord[prevWord.length - 1] !== currWord[0];
+        // 조건 2: 이미 등장했던 단어인지 확인
+        const isDuplicated = usedWords.has(currWord);
+
+        if (isWrongRule || isDuplicated) {
+            const playerNum = ((i % n) + 1);
+            const turn = Math.ceil((i + 1) / n);
+            return [playerNum, turn];
+        }
+
+        // 통과했다면 사용된 단어 목록에 추가
+        usedWords.add(currWord);
+    }
+
+    return [0, 0];
+}
+```
+- `Set.has()`로 중복 검사를 $O(1)$만에 끝내기 때문에, 전체 시간 복잡도가 $O(N)$으로 줄어들어 훨씬 빠르다.
+- 변수명을 `isWrongRule`, `isDuplicated`로 나누어 가독성을 놓였다.
+- 탈락자가 나오면 하단까지 내려가지 않고 그 자리에서 즉시 배열을 리턴해 버리므로 `wrongTurn` 같은 변수를 유지할 필요가 없다.
+
+### 03. 사전 지식
+- `Set.prototype.has()`는 해시 테이블 알고리즘 기반이기 때문에 평균적으로 $O(1)$ (상수 시간)의 시간 복잡도를 가진다.
