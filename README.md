@@ -15,3 +15,4 @@
 | 월 | 링크 |
 |--------|------|
 | 2026년 5월 | [velog 바로가기](https://velog.io/@seung42/js-2026-05-review) |
+| 2026년 6월 | [velog 바로가기](https://velog.io/@seung42/js-2026-06-review) |
