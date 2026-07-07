@@ -82,3 +82,28 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+
+## 📌 Code Review 📌
+
+### 01. 기존 풀이
+```javascript
+function solution(nums) {
+    let monSet = new Set(nums);
+    return nums.length / 2 > monSet.size ? monSet.size : nums.length / 2;
+}
+```
+
+### 02. 개선 방향: 기존 코드 리팩토링 - 가독성 상향
+```javascript
+function solution(nums) {
+    const maxSelect = nums.length / 2;
+    const uniqueMonCount = new Set(nums).size;
+    
+    return Math.min(maxSelect, uniqueMonCount);
+}
+```
+
+### 03. 사전 지식
+- `Math.min(...)`: 인자로 넘긴 값들 중 가장 작은 값을 반환하는 함수
+- `Math.max(...)`: 인자로 넘긴 값들 중 가장 큰 값을 반환하는 함수
