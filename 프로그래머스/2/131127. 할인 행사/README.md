@@ -92,3 +92,125 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 Code Review 📌
+
+### 01. 기존 풀이
+```javascript
+function solution(want, number, discount) {
+    const wantNumObj = {};
+    for (let i = 0; i < want.length; i++) {
+        wantNumObj[want[i]] = number[i];
+    }
+    
+    const discountNumObj = {};
+    let dayCount = 0;
+    
+    discount.forEach((disThing, i) => {
+        if (discountNumObj[disThing] || discountNumObj[disThing] === 0) {
+            discountNumObj[disThing]++;
+        } else {
+            discountNumObj[disThing] = 1;
+        }
+        if (i >= 10) {
+            discountNumObj[discount[i - 10]]--;
+        }
+        if (i >= 9) {
+            let isMatch = true;
+            
+            for (const wantThing in wantNumObj) {
+                if (!discountNumObj[wantThing] || wantNumObj[wantThing] > discountNumObj[wantThing]) {
+                    isMatch = false;
+                    break;
+                }
+            }
+            
+            if (isMatch) dayCount++;
+        }
+    })
+    
+    return dayCount;
+}
+```
+
+### 02. 개선 방향: 기존 코드 리팩토링
+```javascript
+function solution(want, number, discount) {
+    const wantNumObj = {};
+    for (let i = 0; i < want.length; i++) {
+        wantNumObj[want[i]] = number[i];
+    }
+    
+    const discountNumObj = {};
+    let dayCount = 0;
+    
+    discount.forEach((disThing, i) => {
+        // [개선] || 0 을 활용하면 undefined나 0일 때의 예외 처리를 한 줄로 안전하게 끝낼 수 있습니다.
+        discountNumObj[disThing] = (discountNumObj[disThing] || 0) + 1;
+        
+        // 10일 기준 범위를 벗어난 첫 번째 원소 제거
+        if (i >= 10) {
+            discountNumObj[discount[i - 10]]--;
+        }
+        
+        // 딱 10일째(인덱스 9)부터 검사 시작
+        if (i >= 9) {
+            let isMatch = true;
+            
+            for (const wantThing in wantNumObj) {
+                // [개선] 원하는 수량과 할인 수량이 정확히 일치하는지 확인
+                if (wantNumObj[wantThing] !== discountNumObj[wantThing]) {
+                    isMatch = false;
+                    break;
+                }
+            }
+            
+            if (isMatch) dayCount++;
+        }
+    });
+    
+    return dayCount;
+}
+```
+
+### 03. 다른 풀이: `slice` 활용
+```javascript
+function solution(want, number, discount) {
+    let dayCount = 0;
+    
+    // discount 배열을 0번째부터 끝까지 10개씩 슬라이싱하며 확인
+    for (let i = 0; i <= discount.length - 10; i++) {
+        const sliceSection = discount.slice(i, i + 10);
+        
+        // 원하는 제품들이 다 10개 안에 원하는 수량만큼 들어있는지 확인
+        const isMatch = want.every((wantThing, idx) => {
+            // sliceSection 안에 wantThing이 몇 개 있는지 필터링해서 개수 비교
+            return sliceSection.filter(item => item === wantThing).length === number[idx];
+        });
+        
+        if (isMatch) dayCount++;
+    }
+    
+    return dayCount;
+}
+```
+
+### 04. 사전 지식
+- `forEach()`는 배열(Array)의 메서드이기 때문에 일반 객체에는 사용할 수 없다.
+- 객체에 값을 더할 때 복잡하게 `if-else`를 쓰기보다, `obj[key] = (obj[key] || 0) + 1` 같은 패턴을 외워두고 사용하면 예외 케이스를 원천 차단할 수 있다.
+- `Array.prototype.every()`: 모두 만족해야 `true`를 반환한다.
+- `Array.prototype.some()`: 하나만 만족해도 `true`를 반환한다.
+- `Map`: 키(Key)와 값(Value)의 쌍을 저장하며, 일반 객체와 달리 키의 타입에 제한이 없고 삽입된 순서가 보장되는 구조이다.
+  
+  ```
+  const wantNumMap = new Map();
+  wantNumMap.set("banana", 3);
+  wantNumMap.set("apple", 2);
+  
+  console.log(wantNumMap.get("banana")); // 3
+
+  for (const [key, value] of wantNumMap) {
+      console.log(key, value);
+  }
+  ```
+  일반 객체는 내부적으로 `Object.prototype`을 상속받고 있어서, 아주 드물게 `toString`, `constructor` 같은 이름이 데이터로 들어오면 예상치 못한 값과 충돌할 가능성이 있다. `Map`은 이런 상속 관계가 없어서 순수하게 내가 넣은 키-값만 존재한다는 점이 장점이다.
