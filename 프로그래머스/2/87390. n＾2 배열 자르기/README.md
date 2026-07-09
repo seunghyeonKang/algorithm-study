@@ -92,3 +92,38 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 Code Review 📌
+
+### 01. 기존 풀이
+```javascript
+function solution(n, left, right) {
+    let answer = [];
+    
+    for (let i = left; i <= right; i++) {
+        let row = i % n + 1;
+        let hang = Math.floor(i / n) + 1;
+        answer.push(hang > row ? hang : row);
+    }
+    
+    return answer;
+}
+```
+- 시간복잡도가 $O(\text{right} - \text{left})$로 효율적이다.
+- `row`(행)와 col(또는 column)(열)으로 변수명을 수정하자.
+- 내장 함수(`Math.max`)를 활용해서 더 직관적으로 표현해보자.
+
+### 02. 개선 방향: 기존 코드 리팩토링
+```javascript
+function solution(n, left, right) {
+    let answer = [];
+    
+    for (let i = left; i <= right; i++) {
+        let col = i % n + 1;
+        let row = Math.floor(i / n) + 1;
+        answer.push(Math.max(row, col));
+    }
+    
+    return answer;
+}
+```
