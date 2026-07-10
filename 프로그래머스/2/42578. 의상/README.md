@@ -106,3 +106,45 @@ face에 해당하는 의상이 crow_mask, blue_sunglasses, smoky_makeup이므로
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 Code Review 📌
+
+### 01. 기존 풀이
+```javascript
+function solution(clothes) {
+    const clothTypeObj = {};
+    
+    for (let i = 0; i < clothes.length; i++) {
+        const clothType = clothes[i][1];
+        
+        if (clothTypeObj[clothType]) clothTypeObj[clothType]++;
+        else clothTypeObj[clothType] = 1;
+    }
+    
+    let answer = 1;
+    for (let type in clothTypeObj) {
+        answer *= clothTypeObj[type] + 1;
+    }
+    
+    return answer - 1; // (종류의 개수 + 1)의 곱 - 1
+}
+```
+- `clothTypeObj`가 '해당 종류의 의상 개수'를 의미하므로 `clothCountByType` 같은 이름으로 수정해도 좋을 것 같다.
+- `||`를 활용하여 카운트 로직을 더 간결하게 표현해보자.
+- `reduce`를 활용한 함수형 스타일로 간결하게 사용해보자.
+- 구조 분해 할당으로 가독성을 높여보자.
+
+### 02. 개선 방향: 기존 코드 리팩토링
+```javascript
+function solution(clothes) {
+    const clothCounts = clothes.reduce((acc, [_, type]) => {
+        acc[type] = (acc[type] || 0) + 1;
+        return acc;
+    }, {});
+
+    return Object.values(clothCounts).reduce((ans, count) => ans * (count + 1), 1) - 1;
+}
+```
+
+### 03. 사전 지식
+- `Object.values()`: 객체가 가진 속성들의 값(Value)만 뽑아서 새로운 배열로 반환해 주는 함수
