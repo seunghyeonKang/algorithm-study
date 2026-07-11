@@ -73,3 +73,61 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 Code Review 📌
+
+### 01. 기존 풀이
+```javascript
+function solution(progresses, speeds) {
+    // Math.ceil((100 - 각 진행도) / 스피드)일 뒤 개발 완료
+    const completeDays = progresses.map((percent, i) => Math.ceil((100 - percent) / speeds[i]));
+    
+    let oneRelease = [];
+    const answer = [];
+    
+    for (const completeDay of completeDays) {
+        if (oneRelease.length !== 0) {
+            if (oneRelease[0] >= completeDay) {
+                oneRelease.push(completeDay);
+            } else {
+                answer.push(oneRelease.length);
+                oneRelease = [completeDay];
+            }
+        } else {
+            oneRelease.push(completeDay);
+        }
+    }
+    answer.push(oneRelease.length);
+    
+    return answer;
+}
+```
+
+### 02. 개선 방향: 기존 코드 리팩토링
+```javascript
+function solution(progresses, speeds) {
+    const completeDays = progresses.map((percent, i) => 
+        Math.ceil((100 - percent) / speeds[i])
+    );
+
+    const answer = [];
+    let maxDay = completeDays[0];
+    let count = 0;
+
+    for (const day of completeDays) {
+        if (day <= maxDay) {
+            count++;
+        } else {
+            answer.push(count);
+            maxDay = day;
+            count = 1;
+        }
+    }
+    answer.push(count);
+
+    return answer;
+}
+```
+- 기존 코드는 `oneRelease` 배열에 완료일을 계속 `push`하여 공간 복잡도 O(n)를 추가 사용했지만,
+
+  개선 코드는 `count` 변수 하나로 개수만 추적하여 공간 복잡도 O(1)만 추가 사용했다.
