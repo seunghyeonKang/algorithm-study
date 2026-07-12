@@ -69,3 +69,38 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 Code Review 📌
+
+### 01. 기존 풀이
+```javascript
+function solution(citations) {
+    const sortedArr = citations.sort((a, b) => b - a);
+    
+    for (let i = 0; i < sortedArr.length; i++) {
+        if (sortedArr[i] === i + 1) return i + 1;
+        else if (sortedArr[i] < i + 1) return i;
+    }
+    
+    return sortedArr.length;
+}
+```
+- 예외 케이스를 잡지 못해 힌트를 보고 풀었다. 다음에는 1. 구하고자 하는 '단위'와 '타입'을 명시해보고 2. 극단적인 예시를 추가하며 생각해보자.
+  1. 값이 엄청 크거나 작은 경우
+  2. 값이 전부 똑같은 경우
+  3. 데이터가 딱 1개인 경우 등등
+
+### 02. 개선 방향: 기존 코드 개선
+```javascript
+function solution(citations) {
+    const sortedArr = [...citations].sort((a, b) => b - a);
+    
+    for (let i = 0; i < sortedArr.length; i++) {
+        if (sortedArr[i] < i + 1) return i;
+    }
+    
+    return sortedArr.length;
+}
+```
+- 원본 배열 변형 문제를 수정했다.
+- `===` 조건과 `<` 조건을 나눌 필요 없이, `<` 조건 하나만으로도 동일하게 동작하기 때문에 분기 단순화를 할 수 있다.
