@@ -82,3 +82,41 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 Code Review 📌
+
+### 00. 기존 풀이: 효율성 테스트 실패
+```javascript
+function solution(phone_book) {
+    const phoneStrings = phone_book.sort((a, b) => a - b);
+    const phoneNumbers = phoneStrings.map(Number);
+    
+    for (let i = 0; i < phoneStrings.length; i++) {
+        for (let j = i + 1; j < phoneStrings.length; j++) {
+            if (Math.floor(phoneNumbers[j] / (10 ** (phoneStrings[j].length - phoneStrings[i].length))) === phoneNumbers[i]) return false;
+        }
+    }
+    
+    return true;
+}
+```
+- AI 힌트01: 정렬을 숫자 크기 순 대신 사전식으로 하면 접두어 관계에 있는 문자열들이 반드시 옆에 나란히 붙게 된다.
+- AI 힌트02: `startsWith()`를 사용해보자.
+
+### 01. 기존 풀이: 효율성 테스트 통과
+```javascript
+function solution(phone_book) {
+    const phoneStrings = [...phone_book].sort();
+    
+    for (let i = 1; i < phoneStrings.length; i++) {
+        if (phoneStrings[i].startsWith(phoneStrings[i - 1])) return false;
+    }
+    
+    return true;
+}
+```
+- 이중 반복문( $O(N^2)$ ) 구조를 정렬 $O(N \log N)$과 단일 반복문 $O(N \times L)$로 수정하여 시간 복잡도를 개선했다.
+
+### 02. 사전 지식
+- `startsWith()`: 어떤 문자열이 특정 문자열로 시작하는지 확인하여 `true` 또는 `false`를 반환하는 자바스크립트 내장 메서드
+- 앞으로 데이터의 '형태'보다 '본질을 파악하기를 연습해보자.
