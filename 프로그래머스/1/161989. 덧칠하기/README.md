@@ -125,3 +125,42 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 Code Review 📌
+
+### 01. 기존 풀이
+```javascript
+function solution(n, m, section) {
+    // 작은 숫자부터 +m까지 완료, 끝까지
+    let tryNum = 0;
+    let tryLength = 0;
+    
+    for (let i = 0; i < section.length; i++) {
+        if (section[i] > tryLength || i === 0) {
+            tryLength = section[i] + m - 1;
+            tryNum++;
+        }
+    }
+    
+    return tryNum;
+}
+```
+- `i === 0` 조건은 필요없다.
+- 변수명을 좀 더 직관적으로 수정하자.
+
+### 02. 개선 방향: 기존 코드 리팩토
+```javascript
+function solution(n, m, section) {
+    let count = 0;
+    let covered = 0; // 현재까지 칠해진 오른쪽 끝 위치
+
+    for (let i = 0; i < section.length; i++) {
+        if (section[i] > covered) {
+            covered = section[i] + m - 1;
+            count++;
+        }
+    }
+
+    return count;
+}
+```
