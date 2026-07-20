@@ -68,3 +68,43 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 Code Review 📌
+
+### 01. 기존 풀이
+```javascript
+function solution(n_str) {
+    let startIdx = 0;
+    for (let i = 0; i < n_str.length; i++) {
+        if (n_str[i] !== "0") break;
+        else startIdx = i + 1;
+    }
+    return n_str.slice(startIdx);
+}
+```
+- `break`로 빠져나가므로 `else`는 불필요하다.
+- `startIdx`를 매번 갱신하기보다 `i`를 그대로 쓰면 더 간결하다.
+
+### 02. 개선 방향: 기존 코드 리팩토링
+```javascript
+function solution(n_str) {
+    let i = 0;
+    while (n_str[i] === "0") i++;
+    return n_str.slice(i);
+}
+```
+
+### 03. 다른 풀이: 정규식 활용
+```javascript
+const solution = (n_str) => n_str.replace(/^0+/, "");
+```
+
+### 04. 다른 풀이: 숫자 변환
+```javascript
+const solution = (n_str) => String(Number(n_str));
+```
+
+### 05. 사전 지식
+- 정규식
+  - `^` : 문자열의 시작 point
+  - `0+` : `0`이 1개 이상 연속됨
