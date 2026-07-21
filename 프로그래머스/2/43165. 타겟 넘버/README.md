@@ -73,3 +73,70 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 Code Review 📌
+
+### 01. 기존 풀이
+```javascript
+function solution(numbers, target) {
+    let count = 0;
+    
+    const checkValidCalculation = (idx, acc) => {
+        // idx: 현재 배열의 인덱스, acc: 누적값
+        
+        // 탈출 조건
+        if (idx >= numbers.length) {
+            if (acc === 0) count++;
+            return 0;
+        }
+        
+        // 갈림길
+        // 다음 인덱스를 +하는 함수 호출
+        checkValidCalculation(idx + 1, acc + numbers[idx]);
+        // 다음 인덱스를 -하는 함수 호출
+        checkValidCalculation(idx + 1, acc - numbers[idx]);
+    }
+    
+    checkValidCalculation(0, target);
+    return count;
+}
+```
+- `return 0;` 대신 `return`으로도 충분하다.
+- 탈출 조건으로 `idx >= numbers.length` 대신 `idx === numbers.length`를 사용하는 것이 더 정확하다.
+
+### 02. 개선 방향: 기존 코드 리팩토링
+```javascript
+function solution(numbers, target) {
+    let count = 0;
+    
+    const checkValidCalculation = (idx, acc) => {
+        // 모든 숫자를 다 사용했을 때 (기저 조건)
+        if (idx === numbers.length) {
+            if (acc === 0) count++;
+            return; // 깔끔한 void 리턴
+        }
+        
+        // 다음 숫자를 빼거나 더하기
+        checkValidCalculation(idx + 1, acc - numbers[idx]);
+        checkValidCalculation(idx + 1, acc + numbers[idx]);
+    };
+    
+    checkValidCalculation(0, target);
+    return count;
+}
+```
+
+### 03. 다른 풀이: 외부 변수를 사용하지 않는 순수 함수 형태
+```javascript
+function solution(numbers, target) {
+  const dfs = (idx, acc) => {
+    if (idx === numbers.length) return acc === target ? 1 : 0;
+    return dfs(idx + 1, acc + numbers[idx]) + dfs(idx + 1, acc - numbers[idx]);
+  };
+  return dfs(0, 0);
+}
+```
+
+### 04. 사전 지식
+- **DFS**는 시간복잡도가 $O(2^N)$이기 때문에 `N`이 최대 `20~22`일 때 완전탐색이나 DFS로 다 찾아도 된다는 힌트이다.
+- DFS의 기본 뼈대는 1. 탈출 조건과 2. 갈림길 선택으로 이루어져있다. 이 뼈대를 기억해두자.
