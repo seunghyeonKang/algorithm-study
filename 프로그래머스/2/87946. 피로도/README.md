@@ -82,3 +82,58 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 Code Review 📌
+
+### 01. 기존 풀이
+```javascript
+function solution(k, dungeons) {
+    let maxCount = 0;
+    const countValidDungeons = (arr, accK, accD) => {
+        // arr: 돌아야하는 배열, accK: 피로도 누적값, accD: 던전 개수 누적값
+        maxCount = Math.max(maxCount, accD);
+        
+        for (let i = 0; i < arr.length; i++) {
+            if (accK >= arr[i][0]) {
+                countValidDungeons([...arr.slice(0, i), ...arr.slice(i + 1)], accK - arr[i][1], accD + 1);
+            }
+        }
+    }
+    
+    countValidDungeons([...dungeons], k, 0);
+    return maxCount;
+}
+```
+- 매 재귀 호출마다 `[...arr.slice(0, i), ...arr.slice(i + 1)]`로 새로운 배열을 생성하여 메모리 할당 비용이 크다.
+- $O(D)$ (D는 최대 재귀 깊이)의 공간 복잡도를 가진다.
+
+### 02. 다른 풀이: 전형적인 백트래킹 - 방문 배열 사용하기
+```javascript
+function solution(k, dungeons) {
+    let maxCount = 0;
+    const visited = new Array(dungeons.length).fill(false);
+
+    function dfs(currentK, count) {
+        maxCount = Math.max(maxCount, count);
+
+        for (let i = 0; i < dungeons.length; i++) {
+            const [minRequire, consume] = dungeons[i];
+
+            // 아직 방문하지 않았고, 최소 필요 피로도를 충족하는 경우
+            if (!visited[i] && currentK >= minRequire) {
+                visited[i] = true;
+                dfs(currentK - consume, count + 1);
+                visited[i] = false;
+            }
+        }
+    }
+
+    dfs(k, 0);
+    return maxCount;
+}
+```
+- 시간 복잡도는 $O(N!)$로 동일하지만, 재귀 함수 호출 시 발생하는 오버헤드로 인한 추가 연산이 없어 훨씬 가볍고 빠르다.
+- $O(N)$의 공간 복잡도를 가져 스택 오버플로우 위험이 없다.
+
+### 03. 사전 지식
+- DFS(재귀) 방식에서는 함수가 호출될 때마다 호출 스택에 상태가 쌓이고, 각 호출 단계마다 현재 상태를 저장할 별도의 공간이 필요하다. 그러나 반복문 방식에서는 하나의 공유 배열(또는 변수)을 만들어두고 검사가 끝나면 곧바로 다음 경우의 수로 덮어쓰면서 진행하기 때문에, 메모리 사용량 측면에서 매우 효율적이다.
