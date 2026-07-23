@@ -65,3 +65,112 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 Code Review 📌
+
+### 01. 기존 풀이
+```javascript
+function solution(n, computers) {
+    let countNetwork = 0;
+    const isCheckedComputers = new Array(n).fill(false);
+    
+    const checkNetwork = (currentIdx) => {
+        isCheckedComputers[currentIdx] = true;
+        
+        for (let connectedIdx = 0; connectedIdx < n; connectedIdx++) {
+            if (computers[currentIdx][connectedIdx] === 1
+                && currentIdx !== connectedIdx
+                && !isCheckedComputers[connectedIdx]) {
+                checkNetwork(connectedIdx);
+            }
+        }
+    }
+    
+    for (let i = 0; i < n; i++) {
+        if (!isCheckedComputers[i]) {
+            countNetwork++;
+            checkNetwork(i);
+        }
+    }
+    return countNetwork;
+}
+```
+- 명확한 방문 체크 배열 `isCheckedComputers`을 통해 중복 탐색하지 않도록 하여, 공간복잡도 $O(N)$로 효율적으로 관리했다.
+- 변수명이 직관적이어서 코드의 의도를 파악하기 좋다.
+- 자기 자신 비교 조건(`currentIdx !== connectedIdx`)은 `!isCheckedComputers[connectedIdx]` 검사 단계에서 걸러지므로 생략 가능하다.
+- 조건문 하나에 `&&` 연결이 3개 들어가면 복잡해보일 수 있기에, Early Return 패턴을 통해 조건을 분리해도 좋다.
+- 인접행렬을 순회하는 방식이기에 전체 시간복잡도는 $O(n²)$이다. n ≤ 200이라는 제약 안에서 충분히 효율적이다.
+
+### 02. 개선 방향: 기존 코드 리팩토링
+```javascript
+function solution(n, computers) {
+    let countNetwork = 0;
+    const isVisited = new Array(n).fill(false);
+
+    const dfs = (current) => {
+        isVisited[current] = true;
+
+        for (let next = 0; next < n; next++) {
+            // 연결되어 있고, 아직 방문하지 않은 컴퓨터라면 탐색 진행
+            if (computers[current][next] === 1 && !isVisited[next]) {
+                dfs(next);
+            }
+        }
+    };
+
+    for (let i = 0; i < n; i++) {
+        if (!isVisited[i]) {
+            countNetwork++;
+            dfs(i); // 새로운 네트워크 발견 시 해당 네트워크 내부를 모두 방문 처리
+        }
+    }
+
+    return countNetwork;
+}
+```
+
+### 03. 다른 풀이: Union-Find(분리 집합) 자료구조 방식
+```javascript
+function solution(n, computers) {
+    const parent = new Array(n).fill(0).map((_, i) => i); // 처음엔 각자가 자기 자신의 대표
+
+    // Find: x의 최종 대표(루트)를 찾기
+    const find = (x) => {
+        if (parent[x] === x) return x;
+        return parent[x] = find(parent[x]); // 경로 압축
+    };
+
+    // Union: x와 y를 같은 그룹으로 합치기
+    const union = (x, y) => {
+        const rootX = find(x);
+        const rootY = find(y);
+        if (rootX !== rootY) {
+            parent[rootX] = rootY;
+        }
+    };
+
+    for (let i = 0; i < n; i++) {
+        for (let j = i + 1; j < n; j++) {
+            if (computers[i][j] === 1) {
+                union(i, j);
+            }
+        }
+    }
+
+    // 루트가 자기 자신인 원소의 개수 = 그룹(네트워크) 개수
+    const roots = new Set();
+    for (let i = 0; i < n; i++) {
+        roots.add(find(i));
+    }
+    return roots.size;
+}
+```
+
+### 04. 사전 지식
+- **Union-Find** (분리 집합, Disjoint Set): 여러 원소들을 여러 그룹으로 묶어서 관리하는 자료구조이다. 핵심 질문은 "이 두 원소가 같은 그룹에 속해 있는가?"이다.
+  - 지금 네트워크 문제 정도의 규모(n ≤ 200)에서는 DFS든 Union-Find든 성능 차이가 거의 없다.
+
+  **DFS/BFS 대비 유리한 경우:**
+  - 경로 압축 덕분에 `Find` 연산이 거의 $O(1)$에 가깝기 때문에, 연결 여부만 자주 확인해야할 때 유리하다.
+  - 그래프가 실시간으로 계혹 추가/변경될 때, `Union`만 계속 호출하면 되므로 효율적이다.
+  - `Union`하기 전에 이미 같은 그룹인지 확인하면 사이클 판별이 바로 가능하다.
