@@ -98,3 +98,212 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 Code Review 📌
+
+### 00. 기존 풀이: 효율성 테스트 실패
+```javascript
+function solution(maps) {
+    const n = maps[0].length;
+    const m = maps.length;
+    const minCount = [];
+    
+    const dfs = (isValidMap, x, y, accCount) => {
+        // 탈출 조건
+        // (n, m)에 도착했을 때 -> minCount 추가
+        if (x === n - 1 && y === m - 1) {
+            minCount.push(accCount);
+            return;
+        }
+        
+        // 동서남북 갈림길
+        // isValidMap가 1이어야 갈 수 있음
+        // 지나면 0으로 수정
+        const ways = ["right", "left", "down", "up"];
+        for (const way of ways) {
+            if (way === "right") {
+                if (x + 1 < n && isValidMap[y][x + 1]) {
+                    isValidMap[y][x + 1] = 0;
+                    dfs(isValidMap, x + 1, y, accCount + 1);
+                    isValidMap[y][x + 1] = 1;
+                }
+            } else if (way === "left") {
+                if (x - 1 >= 0 && isValidMap[y][x - 1]) {
+                    isValidMap[y][x - 1] = 0;
+                    dfs(isValidMap, x - 1, y, accCount + 1);
+                    isValidMap[y][x - 1] = 1;
+                }
+            } else if (way === "down") {
+                if (y + 1 < m && isValidMap[y + 1][x]) {
+                    isValidMap[y + 1][x] = 0;
+                    dfs(isValidMap, x, y + 1, accCount + 1);
+                    isValidMap[y + 1][x] = 1;
+                }
+            } else if (way === "up") {
+                if (y - 1 >= 0 && isValidMap[y - 1][x]) {
+                    isValidMap[y - 1][x] = 0;
+                    dfs(isValidMap, x, y - 1, accCount + 1);
+                    isValidMap[y - 1][x] = 1;
+                }
+            }
+        }
+    }
+    
+    dfs([...maps], 0, 0, 1);
+    return minCount.length === 0 ? -1 : Math.min(...minCount);
+}
+```
+
+### 01. 기존 풀이: 효율성 테스트 성공
+```javascript
+function solution(maps) {
+    const n = maps[0].length;
+    const m = maps.length;
+    const isValidMap = structuredClone(maps); // 갈 수 있는 곳은 1
+    let currentLocations = [[0, 0]];
+    
+    const bfs = (stepCount) => {
+        const nextLoactions = [];
+        
+        // 동서남북 갈림길
+        for (let i = 0; i < currentLocations.length; i++) {
+            const [x, y] = currentLocations[i];
+            
+            // 탈출 조건
+            // (n, m)에 도착했을 때
+            if (x === n - 1 && y === m - 1) return stepCount;
+            
+            // isValidMap가 1이어야 갈 수 있음
+            // 지나면 0으로 수정
+            const ways = ["right", "left", "down", "up"];
+            for (const way of ways) {
+                if (way === "right") {
+                    if (x + 1 < n && isValidMap[y][x + 1]) {
+                        nextLoactions.push([x + 1, y]);
+                        isValidMap[y][x + 1] = 0;
+                    }
+                } else if (way === "left") {
+                    if (x - 1 >= 0 && isValidMap[y][x - 1]) {
+                        nextLoactions.push([x - 1, y]);
+                        isValidMap[y][x - 1] = 0;
+                    }
+                } else if (way === "down") {
+                    if (y + 1 < m && isValidMap[y + 1][x]) {
+                        nextLoactions.push([x, y + 1]);
+                        isValidMap[y + 1][x] = 0;
+                    }
+                } else if (way === "up") {
+                    if (y - 1 >= 0 && isValidMap[y - 1][x]) {
+                        nextLoactions.push([x, y - 1]);
+                        isValidMap[y - 1][x] = 0;
+                    }
+                }
+            }
+        }
+        if (nextLoactions.length === 0) {
+            return -1;
+        } else {
+            currentLocations = [...nextLoactions];
+            return bfs(stepCount + 1);
+        }
+    }
+    
+    return bfs(1);
+}
+```
+- 효율성 테스트를 겨우 통과했지만 재귀 호출 형태로 인해 Call Stack 제한에 걸려 스택 오버플로우 위험이 생긴다.
+- `structuredClone()`는 깊은 복사를 수행하므로 맵의 크기가 커질수록 메모리와 시간 복잡도에 부담을 준다. 코딩테스트 환경에서는 원본 배열을 직접 수정해도 괜찮다.
+- 현재 `if-else`로 `"right"`, `"left"`, `"down"`, `"up"`을 분기하여 20줄 이상 작성했다. 방향 배열(dx, dy)을 활용하여 코드를 단순화시키자.
+- 시작점 `(0, 0)`을 방문 배열에서 0으로 지우고 시작하지 않으면, 나중에 시작점으로 다시 돌아오는 불필요한 체크가 일어난다.
+
+### 02. 개선 방향: 반복문으로 리팩토링(Level-wise BFS)
+```javascript
+function solution(maps) {
+    const n = maps[0].length; // 열 개수
+    const m = maps.length;    // 행 개수
+    const visited = maps.map(row => [...row]);
+    
+    const directions = [[1, 0], [-1, 0], [0, 1], [0, -1]]; // 우, 좌, 하, 상
+    
+    let currentLocations = [[0, 0]];
+    visited[0][0] = 0; // 시작점도 방문 처리
+    
+    let stepCount = 1;
+    
+    while (currentLocations.length > 0) {
+        const nextLocations = [];
+        
+        for (const [x, y] of currentLocations) {
+            if (x === n - 1 && y === m - 1) return stepCount;
+            
+            for (const [dx, dy] of directions) {
+                const nx = x + dx;
+                const ny = y + dy;
+                
+                if (nx >= 0 && nx < n && ny >= 0 && ny < m && visited[ny][nx]) {
+                    visited[ny][nx] = 0;
+                    nextLocations.push([nx, ny]);
+                }
+            }
+        }
+        
+        currentLocations = nextLocations;
+        stepCount++;
+    }
+    
+    return -1;
+}
+```
+- 재귀를 `while` 반복문으로 변경해 스택 오버플로우 위험 제거헀다.
+- 시작점을 명시적으로 방문 처리했다.
+- 방향을 배열로 관리해서 코드 중복을 제거했다.
+- 다만 매 레벨마다 `nextLocations` 배열을 새로 생성하고 메모리를 할당하므로, 맵이 크고 단계가 길어지면 가비지 컬렉터(GC)에 부담이 생길 수 있다.
+
+### 03. 다른 풀이: Single Queue + Index Pointer
+```javascript
+function solution(maps) {
+    const n = maps.length;      // 행 (y)
+    const m = maps[0].length;   // 열 (x)
+    
+    // 방향 벡터: 상, 하, 좌, 우
+    const dx = [-1, 1, 0, 0];
+    const dy = [0, 0, -1, 1];
+    
+    // 큐 초기화: [y, x, 이동 거리]
+    const queue = [[0, 0, 1]];
+    
+    // 시작 위치 방문 처리 (벽으로 만듦)
+    maps[0][0] = 0;
+    
+    let head = 0; // shift()의 O(N) 성능 저하를 막기 위한 Pointer
+    
+    while (head < queue.length) {
+        const [y, x, dist] = queue[head++];
+        
+        // 도착지에 도달한 경우
+        if (y === n - 1 && x === m - 1) {
+            return dist;
+        }
+        
+        // 4방향 탐색
+        for (let i = 0; i < 4; i++) {
+            const ny = y + dy[i];
+            const nx = x + dx[i];
+            
+            // 맵 범위 내에 있고, 갈 수 있는 길(1)인 경우
+            if (ny >= 0 && ny < n && nx >= 0 && nx < m && maps[ny][nx] === 1) {
+                maps[ny][nx] = 0; // 방문 처리
+                queue.push([ny, nx, dist + 1]);
+            }
+        }
+    }
+    
+    return -1; // 도착할 수 없는 경우
+}
+```
+- 배열을 새로 만들지 않고 하나의 배열만 쓰므로 메모리 할당이 최적화되어 있다.
+- 시간 복잡도가 최적화되어 있다.
+- 직관성이 살짝 떨어진다.
+
+### 04. 사전 지식
+- 일반적인 BFS는 `while`문과 큐(Queue)라는 선입선출(FIFO, First In First Out) 구조를 사용한다. '현재 위치에서 갈 수 있는 모든 가까운 칸을 먼저 방문한다'는 원리로 동작하기 때문이다.
