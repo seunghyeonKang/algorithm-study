@@ -65,3 +65,23 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 Code Review 📌
+
+### 01. 기존 풀이
+```javascript
+function solution(n) {
+    if (n % 2 === 1) n -= 1;
+    
+    return (n + 2) * n / 4;
+}
+```
+
+### 02. 개선 방향: 내림(`Math.floor`) 함수 활용
+```javascript
+function solution(n) {
+    var half = Math.floor(n/2);
+    return half*(half+1);
+}
+```
+- 의도가 좀 더 직관적이다.
