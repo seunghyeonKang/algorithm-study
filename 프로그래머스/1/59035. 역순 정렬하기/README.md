@@ -97,3 +97,17 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 SQL Code Review 📌
+
+### 01. 작성한 쿼리
+```sql
+SELECT NAME, DATETIME
+FROM ANIMAL_INS
+ORDER BY ANIMAL_ID DESC;
+```
+
+### 02. 사전 지식 & SQL 개념
+- `ORDER BY`: 어떤 컬럼(열)을 기준으로 정렬할 것인지를 지정하는 구문
+  - 기본적으로 ORDER BY만 작성하면 오름차순(ASC)으로 정렬된다.
+  - `DESC`: Descending의 약자로, "큰 것부터 작은 순서대로(내림차순)" 정렬한다.
