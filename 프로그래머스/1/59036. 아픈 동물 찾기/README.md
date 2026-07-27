@@ -151,9 +151,17 @@
 SELECT ANIMAL_ID, NAME FROM ANIMAL_INS WHERE INTAKE_CONDITION = "Sick"; 
 ```
 
-### 02. 작성 포인트 & 주의점
+### 02. 권장 쿼리
+```sql
+SELECT ANIMAL_ID, NAME 
+FROM ANIMAL_INS 
+WHERE INTAKE_CONDITION = 'Sick'
+ORDER BY ANIMAL_ID ASC;
+```
+
+### 03. 작성 포인트 & 주의점
 - 정렬 조건(`ORDER BY`) 누락 주의
 - 표준 SQL 규격에 맞춰 문자열은 작은따옴표(`' '`) 사용
 
-### 03. 사전 지식 & SQL 개념
+### 04. 사전 지식 & SQL 개념
 - `ORDER BY` 기본값은 `ASC`(오름차순, Ascending), 내림차순은 `DESC` (Descending)
