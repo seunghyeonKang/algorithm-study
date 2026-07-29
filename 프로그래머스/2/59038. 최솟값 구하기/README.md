@@ -128,3 +128,15 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 SQL Code Review 📌
+
+### 01. 작성한 쿼리
+```sql
+SELECT MIN(DATETIME) AS 시간
+FROM ANIMAL_INS;
+```
+
+### 02. 사전 지식 & SQL 개념
+- `MIN()`: 지정한 컬럼에서 가장 작은 값(최솟값)을 찾아 출력해 주는 집계 함수
+- `AS`: 조회 결과에서 컬럼이나 테이블에 새로운 이름(별칭)을 붙여주는 키워드
