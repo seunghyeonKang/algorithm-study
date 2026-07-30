@@ -154,3 +154,23 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 SQL Code Review 📌
+
+### 01. 작성한 쿼리
+```sql
+SELECT NAME, COUNT(NAME) AS COUNT
+FROM ANIMAL_INS
+WHERE NAME IS NOT NULL
+GROUP BY NAME
+HAVING COUNT(NAME) >= 2
+ORDER BY NAME ASC;
+```
+
+### 02. 사전 지식 & SQL 개념
+- `GROUP BY`: 지정한 컬럼의 같은 값들을 하나로 묶어 그룹을 만드는 구문
+- `COUNT()`: 데이터(행)의 개수를 세어주는 집계 함수
+- `WHERE`: 그룹을 만들기 전에 개별 데이터를 조건으로 걸러내는 구문
+- `HAVING`: 그룹을 만든 후에 집계된 결과(예: 개수)를 조건으로 걸러내는 구문
+- `IS NOT NULL`: 값이 비어있지(NULL) 않은 데이터만 골라내는 조건문
+- `ORDER BY`: 조회된 최종 결과를 원하는 순서(오름차순/내림차순)로 정렬하는 구문
