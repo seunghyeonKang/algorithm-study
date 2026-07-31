@@ -128,3 +128,16 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 SQL Code Review 📌
+
+### 01. 작성한 쿼리
+```sql
+SELECT COUNT(DISTINCT NAME) AS count
+FROM ANIMAL_INS;
+```
+
+### 02. 사전 지식 & SQL 개념
+- `DISTINCT`: SQL에서 조회 결과의 중복된 값을 제거하고 고유한(unique) 값만 남겨주는 키워드
+- `GROUP BY NAME`: 전체 중복 제거가 아니라, 이름별로 그룹을 쪼개어 각각의 개수를 세게 만든다. (결과가 1개의 숫자가 아닌 여러 행으로 출력됨)
+- `COUNT(NAME)`: `NAME` 컬럼을 지정하면 `WHERE NAME IS NOT NULL`을 쓰지 않아도 `NULL`은 알아서 제외된다.
