@@ -120,3 +120,15 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 SQL Code Review 📌
+
+### 01. 작성한 쿼리
+```sql
+SELECT ANIMAL_ID
+FROM ANIMAL_INS
+WHERE NAME IS NULL;
+```
+
+### 02. 사전 지식 & SQL 개념
+- `IS NULL`: 비교 연산자가 아니라 "이 값이 NULL 상태인가?"를 직접 검사하는 전용 연산자이다. `WHERE NAME = NULL`보다 정확도가 높다.
