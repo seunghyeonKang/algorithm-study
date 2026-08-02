@@ -134,3 +134,20 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 SQL Code Review 📌
+
+### 01. 작성한 쿼리
+```sql
+SELECT 
+    ANIMAL_TYPE,
+    IFNULL(NAME, 'No name') AS NAME,
+    SEX_UPON_INTAKE
+FROM 
+    ANIMAL_INS
+ORDER BY 
+    ANIMAL_ID ASC;
+```
+
+### 02. 사전 지식 & SQL 개념
+- `IFNULL(NAME, 'No name')`: MySQL의 `IFNULL` 함수를 사용하여 `NAME` 컬럼값이 `NULL`이면 '`No name`'으로 대체하여 출력한다.
