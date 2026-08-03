@@ -143,3 +143,24 @@
       </table>
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 SQL Code Review 📌
+
+### 01. 작성한 쿼리
+```sql
+SELECT WAREHOUSE_ID, WAREHOUSE_NAME, ADDRESS, IFNULL(FREEZER_YN, 'N') AS FREEZER_YN
+FROM FOOD_WAREHOUSE
+WHERE ADDRESS LIKE '경기도%'
+ORDER BY WAREHOUSE_ID ASC;
+```
+
+### 02. 사전 지식 & SQL 개념
+- `WHERE ADDRESS LIKE '경기도%'`: 주소가 '경기도'로 시작하는 창고만 추출하기 위해 `LIKE '경기도%'` 조건문으로 필터링한다.
+  - `경기도%`: '경기도'로 시작하는 문자열
+  - `%경기도%`: 위치 상관없이 '경기도'가 포함된 문자열
+- `IFNULL`: 별도의 줄이 아니라 `SELECT` 절의 컬럼명 자리에 들어가야 한다.
+- 문자열 따옴표 규격: SQL 표준 및 데이터베이스 호환성을 위해 문자열 감싸기에는 쌍따옴표(`"`) 대신 단일 따옴표(`'`)를 사용하는 것이 안전하다.
+  - 단일 따옴표 (`' '`): 문자열 리터럴 (데이터 값)
+    - 예: `'경기도'`, `'N'`, `'홍길동'`, `'2026-08-04'`
+  - 쌍따옴표 (`" "`): 식별자 (테이블명, 컬럼명)
+    - 예: `SELECT "WAREHOUSE_ID" FROM "FOOD_WAREHOUSE"`
