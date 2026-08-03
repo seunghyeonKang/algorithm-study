@@ -110,3 +110,16 @@
       </table>
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 SQL Code Review 📌
+
+### 01. 작성한 쿼리
+```sql
+SELECT COUNT(*) AS USERS
+FROM USER_INFO
+WHERE AGE IS NULL;
+```
+
+### 02. 사전 지식 & SQL 개념
+- `COUNT(컬럼명)`: `NULL`인 값을 무시하고, 값이 존재하는 행만 센다. 따라서 `WHERE AGE IS NULL` 조건에 `COUNT(AGE)`를 쓰면 `0`만 출력된다.
+- `COUNT(*)`: `NULL` 여부와 상관없이 조건에 맞는 전체 행의 개수를 센다.
