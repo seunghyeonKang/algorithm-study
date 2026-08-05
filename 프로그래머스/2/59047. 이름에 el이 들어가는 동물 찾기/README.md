@@ -145,3 +145,18 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 SQL Code Review 📌
+
+### 01. 작성한 쿼리
+```sql
+SELECT ANIMAL_ID, NAME
+FROM ANIMAL_INS
+WHERE ANIMAL_TYPE = 'Dog'
+  AND NAME LIKE '%EL%'
+ORDER BY NAME ASC, ANIMAL_ID ASC;
+```
+
+### 02. 사전 지식 & SQL 개념
+- 개만 골라내야 하므로 `WHERE ANIMAL_TYPE = 'Dog'` 조건을 `AND`와 함께 추가해야 한다.
+- `ORDER BY`: 문제에서 요구한 1순위 조건인 `NAME`을 `ANIMAL_ID`보다 앞에 적어야 한다.
