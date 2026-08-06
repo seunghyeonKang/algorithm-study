@@ -128,3 +128,18 @@
       </table>
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 SQL Code Review 📌
+
+### 01. 정답 쿼리
+```sql
+SELECT COUNT(USER_ID) AS USERS
+FROM USER_INFO
+WHERE AGE BETWEEN 20 AND 29
+  AND YEAR(JOINED) = 2021;
+```
+
+### 02. 사전 지식 & SQL 개념
+- 나이 범위 조건: `AGE >= 20 AND AGE < 30` 대신 `AGE BETWEEN 20 AND 29`를 사용하면 가독성이 높아진다.
+- 날짜 추출 함수: `DATE` 타입 컬럼에서 연도만 추출할 때는 `LIKE '2021%'`보다 `YEAR(JOINED) = 2021`을 쓰는 것이 직관적이다.
+- 성능 및 형변환: `DATE` 컬럼에 `LIKE`를 쓰면 내부적으로 문자열 형변환이 일어나 인덱스를 제대로 타지 못할 수 있다.
