@@ -218,3 +218,16 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 SQL Code Review 📌
+
+### 01. 정답 쿼리
+```sql
+SELECT DR_NAME, DR_ID, MCDP_CD, HIRE_YMD
+FROM DOCTOR
+WHERE MCDP_CD IN ('CS', 'GS')
+ORDER BY HIRE_YMD DESC, DR_NAME ASC;
+```
+
+### 02. 사전 지식 & SQL 개념
+- `IN`: 지정한 여러 값 중 하나라도 일치하는 데이터가 있는지 비교할 때 사용하는 SQL 조건 연산자이다. `WHERE MCDP_CD = 'CS' OR MCDP_CD = 'GS'` 대신 `WHERE MCDP_CD IN ('CS', 'GS')`로 사용하는 것이 가독성이 더 좋다.
