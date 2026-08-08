@@ -171,3 +171,15 @@
       </table>
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 SQL Code Review 📌
+
+### 01. 정답 쿼리
+```sql
+SELECT FLAVOR
+FROM FIRST_HALF
+ORDER BY TOTAL_ORDER DESC, SHIPMENT_ID ASC;
+```
+
+### 02. 사전 지식 & SQL 개념
+- `ORDER BY TOTAL_ORDER DESC, SHIPMENT_ID`로 적어도 동일하게 동작하지만, 오름차순 명시(`ASC`)를 적어주는 게 가독성과 의도 전달 측면에서 더 좋다.
