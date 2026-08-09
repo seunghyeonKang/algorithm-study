@@ -189,3 +189,19 @@
       </table>
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 SQL Code Review 📌
+
+### 01. 정답 쿼리
+```sql
+SELECT PT_NAME, PT_NO, GEND_CD, AGE, IFNULL(TLNO, 'NONE')
+FROM PATIENT
+WHERE
+    AGE <= 12
+    AND GEND_CD = 'W'
+ORDER BY AGE DESC, PT_NAME ASC;
+```
+
+### 02. 사전 지식 & SQL 개념
+- `IFNULL`: MySQL 전용 함수이므로 프로그래머스 SQL 문제(MySQL 환경)에서는 전혀 문제없이 통과한다.
+- Oracle이나 표준 SQL 환경에서, ANSI SQL 표준 함수인 `COALESCE(TLNO, 'NONE')`나 `NVL(TLNO, 'NONE')`(Oracle)을 써야한다.
