@@ -147,3 +147,17 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 SQL Code Review 📌
+
+### 01. 정답 쿼리
+```sql
+SELECT ANIMAL_ID, NAME
+FROM ANIMAL_INS
+WHERE INTAKE_CONDITION <> 'Aged'
+ORDER BY ANIMAL_ID;
+```
+
+### 02. 사전 지식 & SQL 개념
+- MySQL에서는 큰따옴표(`"`)를 문자열 감싸기에 허용하지만, ANSI SQL 표준에서는 문자열 표현 시 작은따옴표(`'`) 사용을 원칙으로 한다.
+- `!=` 연산자도 대부분의 현대 DB에서 지원하지만, ANSI SQL 표준 부정 연산자는 `<>` 이다.
