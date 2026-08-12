@@ -133,3 +133,16 @@
       </table>
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 SQL Code Review 📌
+
+### 01. 정답 쿼리
+```sql
+SELECT *
+FROM FOOD_PRODUCT
+ORDER BY PRICE DESC
+LIMIT 1;
+```
+
+### 02. 사전 지식 & SQL 개념
+- `LIMIT`: SQL에서 조회된 결과 중 가져올 행(Row)의 개수를 제한할 때 사용하는 키워드
