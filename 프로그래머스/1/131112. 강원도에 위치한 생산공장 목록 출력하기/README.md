@@ -158,3 +158,23 @@
       </table>
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 SQL Code Review 📌
+
+### 01. 정답 쿼리
+```sql
+SELECT FACTORY_ID, FACTORY_NAME, ADDRESS
+FROM FOOD_FACTORY
+WHERE ADDRESS LIKE '강원도%'
+ORDER BY FACTORY_ID;
+```
+
+### 02. 사전 지식 & SQL 개념
+- `=` 연산자는 완전 일치(Exact Match)를 비교한다.
+- `LIKE` 연산자는 부분 일치 및 패턴 매칭(Pattern Matching)을 수행한다.
+  - `%`: 0개 이상의 모든 문자를 대체한다 (글자 수가 없거나 몇 글자든 상관없음).
+
+    `강원도%`: '강원도'로 시작하는 모든 문자열 (강원도 춘천시, 강원도 원주시 등)
+  - `_`: 정확히 1개의 임의 문자를 대체한다 (반드시 딱 한 글자가 있어야 함).
+
+    `강원_`: '강원' 뒤에 딱 한 글자만 더 붙는 3글자 문자열 (강원도, 강원군 등)
