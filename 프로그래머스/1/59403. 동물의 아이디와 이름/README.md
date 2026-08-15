@@ -105,3 +105,15 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 SQL Code Review 📌
+
+### 01. 정답 쿼리
+```sql
+SELECT ANIMAL_ID, NAME
+FROM ANIMAL_INS
+ORDER BY ANIMAL_ID;
+```
+
+### 02. 사전 지식 & SQL 개념
+- `ORDER BY ANIMAL_ID ASC;`처럼 오름차순(`ASC`)을 명시하면 더 좋다.
