@@ -171,3 +171,30 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 SQL Code Review 📌
+
+### 01. 정답 쿼리
+```sql
+SELECT
+    ANIMAL_ID,
+    NAME,
+    DATE_FORMAT(DATETIME, '%Y-%m-%d') AS 날짜
+FROM ANIMAL_INS
+ORDER BY ANIMAL_ID ASC;
+```
+
+### 02. 사전 지식 & SQL 개념
+- `DATE_FORMAT()`: MySQL/MariaDB에서 날짜나 시간 데이터를 원하는 형태의 문자열로 변환할 때 사용하는 가장 대표적인 날짜 포맷 함수
+  - 첫 번째 인자: 변환할 DATE, DATETIME, TIMESTAMP 타입의 컬럼이나 값
+  - 두 번째 인자: 날짜/시간을 어떤 형태로 출력할지 지정하는 포맷 기호 조합
+- 대소문자 주의사항
+  - `%Y`와 `%y`의 차이 (연도)
+    - `%Y` (대문자): 4자리 연도 (2026, 2018)
+    - `%y` (소문자): 2자리 연도 (26, 18)
+  - `%M`과 `%m`의 차이 (월)
+    - `%m` (소문자): 2자리 숫자 월 (01, 08, 12)
+    - `%M` (대문자): 영문 월 이름 (January, August, December)
+  - `%D`와 `%d`의 차이 (일)
+    - `%d` (소문자): 2자리 숫자 일 (01, 13, 22)
+    - `%D` (대문자): 서수(ordinal) 표기 (1st, 2nd, 13th, 22nd)
