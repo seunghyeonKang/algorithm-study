@@ -118,3 +118,15 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 SQL Code Review 📌
+
+### 01. 정답 쿼리
+```sql
+SELECT SUM(PRICE) AS TOTAL_PRICE
+FROM ITEM_INFO
+WHERE RARITY = 'LEGEND';
+```
+
+### 02. 사전 지식 & SQL 개념
+- `SUM`: 테이블의 특정 숫자 컬럼에 있는 모든 값의 합계를 계산해 주는 집계 함수
