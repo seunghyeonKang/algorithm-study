@@ -128,3 +128,15 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 SQL Code Review 📌
+
+### 01. 정답 쿼리
+```sql
+SELECT COUNT(*) AS count
+FROM ANIMAL_INS;
+```
+
+### 02. 사전 지식 & SQL 개념
+- `COUNT(*)`: `NULL` 여부와 상관없이 테이블의 전체 행(row) 수를 가장 직관적으로 세는 대표적인 방법이다.
+- 별칭(Alias) 따옴표 규칙: 컬럼 별칭에 작은따옴표(`'count'`) 대신 따옴표를 생략(`AS count`)하거나 백틱(`AS `count``)을 사용하는 것이 SQL 표준 및 다른 DB와의 호환성에 더 좋다.
