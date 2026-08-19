@@ -128,3 +128,24 @@
       </table>
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 SQL Code Review 📌
+
+### 01. 정답 쿼리
+```sql
+SELECT
+    LEFT(PRODUCT_CODE, 2) AS CATEGORY,
+    COUNT(*) AS PRODUCTS
+FROM
+    PRODUCT
+GROUP BY
+    LEFT(PRODUCT_CODE, 2)
+ORDER BY
+    CATEGORY;
+```
+
+### 02. 사전 지식 & SQL 개념
+- `LEFT(문자열, N)`: 문자열의 왼쪽부터 `N`번째 글자까지만 잘라내는 함수
+- `GROUP BY`: 데이터를 그룹으로 묶었으면, `SELECT` 절에는 그룹 기준 컬럼과 `COUNT()` 같은 집계 함수만 올 수 있다.
+- `COUNT(*)` vs `COUNT(컬럼)`: `COUNT(*)`는 전체 행 개수를 세고, `COUNT(컬럼)`은 `NULL`이 아닌 값만 센다.
+- SQL 실행 순서: 작성 순서와 달리 실제 처리 순서는 `FROM` ➔ `GROUP BY` ➔ `SELECT` ➔ `ORDER BY`이다.
