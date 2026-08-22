@@ -211,3 +211,22 @@
       </table>
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 SQL Code Review 📌
+
+### 01. 정답 쿼리
+```sql
+SELECT MCDP_CD AS '진료과코드', COUNT(APNT_NO) AS '5월예약건수'
+FROM APPOINTMENT
+WHERE APNT_YMD LIKE '2022-05%'
+GROUP BY MCDP_CD
+ORDER BY 5월예약건수 ASC, 진료과코드 ASC;
+```
+
+### 02. 사전 지식 & SQL 개념
+- TIMESTAMP 타입에 `LIKE` 연산자 사용 시 인덱스 미작용: 날짜 타입 컬럼에 `LIKE`를 쓰면 내부적으로 문자열로 변환되면서 인덱스를 타지 못해 검색 성능이 저하된다.
+- 날짜 범위 조건의 실무적 효율성: 5월 데이터를 찾을 때 `LIKE '2022-05%'` 대신 `>= '2022-05-01' AND < '2022-06-01'`처럼 범위 연산자로 검색하는 것이 성능상 훨씬 유리하다.
+  ```sql
+  WHERE APNT_YMD >= '2022-05-01' AND APNT_YMD < '2022-06-01'
+  ```
+- `COUNT(*)`와 `COUNT(컬럼명)`의 관례적 차이: 단순 행 개수를 세는 목적일 때는 특정 컬럼명 대신 `COUNT(*)`를 사용하는 것이 더 보편적이고 직관적인 표현이다.
