@@ -126,3 +126,24 @@
       </table>
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 SQL Code Review 📌
+
+### 01. 정답 쿼리
+```sql
+SELECT CAR_TYPE, COUNT(CAR_ID) AS CARS
+FROM CAR_RENTAL_COMPANY_CAR
+WHERE OPTIONS LIKE '%통풍시트%' 
+   OR OPTIONS LIKE '%열선시트%' 
+   OR OPTIONS LIKE '%가죽시트%'
+GROUP BY CAR_TYPE
+ORDER BY CAR_TYPE ASC;
+```
+
+### 02. 사전 지식 & SQL 개념
+- `OR` 연산자의 동작 방식: `OR` 뒤에 컬럼명을 생략하고 조건만 적으면 안 되고, `OPTIONS LIKE '%열선시트%'`처럼 매번 완성된 조건을 적어줘야 한다.
+- SQL에서 문자열을 조건으로 쓸 때: `OR '%열선시트%'`라고만 쓰면 SQL은 이 문자열 자체를 '참(True)'으로 판단하여 조건문 전체가 무의미해진다.
+- `REGEXP`를 활용한 간결한 조건 작성법: 여러 키워드를 찾을 때 `LIKE`를 여러 번 쓰지 않고 `REGEXP 'A|B|C'`처럼 정규표현식으로 간단하게 묶는 방법이 있다.
+  ```
+  WHERE OPTIONS REGEXP '통풍시트|열선시트|가죽시트'
+  ```
