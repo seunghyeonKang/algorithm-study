@@ -124,3 +124,20 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 SQL Code Review 📌
+
+### 01. 정답 쿼리
+```sql
+SELECT ANIMAL_TYPE, COUNT(ANIMAL_TYPE) AS count
+FROM ANIMAL_INS
+GROUP BY ANIMAL_TYPE
+ORDER BY ANIMAL_TYPE ASC;
+```
+
+### 02. 사전 지식 & SQL 개념
+- `COUNT(*)` 사용: NULL 여부를 따지지 않고 행 전체 개수를 세는 `COUNT(*)`가 더 직관적이고 흔히 쓰인다.
+- 명시적 정렬: 알파벳순(`ASC`) 대신 `FIELD()` 함수 등을 쓰면 고양이, 개 외에 다른 데이터가 섞여 있어도 확실하게 원하는 순서를 보장할 수 있다.
+  ```sql
+  ORDER BY FIELD(ANIMAL_TYPE, 'Cat', 'Dog')
+  ```
