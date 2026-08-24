@@ -139,3 +139,27 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 SQL Code Review 📌
+
+### 01. 정답 쿼리
+```sql
+SELECT
+    ANIMAL_ID,
+    NAME,
+    CASE
+        WHEN SEX_UPON_INTAKE LIKE '%Neutered%' OR SEX_UPON_INTAKE LIKE '%Spayed%' THEN 'O'
+        ELSE 'X'
+    END AS '중성화'
+FROM ANIMAL_INS
+ORDER BY ANIMAL_ID ASC;
+```
+
+### 02. 사전 지식 & SQL 개념
+- `CASE WHEN ... THEN ... ELSE ... END`
+  - `CASE`: 조건에 따라 값을 변경하겠다는 시작을 알린다.
+  - `WHEN 조건`: 만약 이 조건이 맞다면...
+  - `THEN 'O'`: 'O'라고 표시한다.
+  - `ELSE 'X'`: 위 조건에 맞지 않는 나머지는 전부 'X'라고 표시한다.
+  - `END`: 조건문을 종료한다.
+  - `AS 중성화`: 생성된 결과 열(Column)의 이름을 '중성화'로 지정한다.
