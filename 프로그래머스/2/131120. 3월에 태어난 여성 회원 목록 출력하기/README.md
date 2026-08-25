@@ -137,3 +137,24 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 SQL Code Review 📌
+
+### 01. 정답 쿼리
+```sql
+SELECT 
+    MEMBER_ID, 
+    MEMBER_NAME, 
+    GENDER, 
+    DATE_FORMAT(DATE_OF_BIRTH, '%Y-%m-%d') AS DATE_OF_BIRTH
+FROM MEMBER_PROFILE
+WHERE 
+    MONTH(DATE_OF_BIRTH) = 3
+    AND GENDER = 'W'
+    AND TLNO IS NOT NULL
+ORDER BY MEMBER_ID ASC;
+```
+
+### 02. 사전 지식 & SQL 개념
+- 프로그래머스 등의 SQL 코테 플랫폼에서는 DATE 타입 컬럼을 조회할 때 시/분/초가 포함되지 않은 `YYYY-MM-DD` 형식으로 출력할 것을 명시적 혹은 암묵적으로 요구한다.
+- 날짜 전용 함수(`MONTH()` 또는 `TO_CHAR()`)를 사용하는 것이 훨씬 안전하고 가독성이 좋다.
