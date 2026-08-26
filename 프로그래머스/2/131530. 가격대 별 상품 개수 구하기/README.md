@@ -133,3 +133,18 @@
       </table>
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 SQL Code Review 📌
+
+### 01. 정답 쿼리
+```sql
+SELECT
+    TRUNCATE(PRICE, -4) AS PRICE_GROUP,
+    COUNT(*) AS PRODUCTS
+FROM PRODUCT
+GROUP BY PRICE_GROUP
+ORDER BY PRICE_GROUP ASC;
+```
+
+### 02. 사전 지식 & SQL 개념
+- `TRUNCATE(PRICE, -4)`: 천 원 이하 단위를 버려 가격을 만 원 단위의 `PRICE_GROUP`으로 변환한다.
