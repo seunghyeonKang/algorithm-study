@@ -184,3 +184,18 @@
       </table>
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 SQL Code Review 📌
+
+### 01. 정답 쿼리
+```sql
+SELECT
+    COUNT(*) AS FISH_COUNT,
+    MONTH(TIME) AS MONTH
+FROM FISH_INFO
+GROUP BY MONTH(TIME)
+ORDER BY MONTH(TIME) ASC;
+```
+
+### 02. 사전 지식 & SQL 개념
+- `GROUP BY`와 `ORDER BY` 절에서 함수를 다시 쓰지 않고, `SELECT`절에서 지정한 컬럼 별칭(Alias)인 `MONTH`를 그대로 사용해도 된다.
