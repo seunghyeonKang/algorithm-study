@@ -118,3 +118,22 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 SQL Code Review 📌
+
+### 01. 정답 쿼리
+```sql
+SELECT HOUR(DATETIME) AS HOUR, COUNT(*) AS COUNT
+FROM ANIMAL_OUTS
+WHERE HOUR(DATETIME) BETWEEN 9 AND 19
+GROUP BY HOUR
+ORDER BY HOUR;
+```
+
+### 02. 사전 지식 & SQL 개념
+- `WHERE HOUR(DATETIME) >= 9 AND HOUR(DATETIME) < 20` 구문 대신 `BETWEEN 9 AND 19`를 사용하면 가독성이 더 좋다.
+- 작은따옴표 (`' '`) : 진짜 글자(데이터)
+  - `WHERE` 절 등에서 조건으로 글자나 날짜를 검색할 때 사용한다.
+- 백틱 (`` ` ` ``) 또는 큰따옴표 (`" "`) : 이름(컬럼명, 테이블명, 별칭)
+  - 테이블 이름, 컬럼(열) 이름, 별칭 등 데이터베이스 내의 객체 이름을 지정할 때 사용한다.
+- MySQL에서는 예약어라도 `AS` 뒤에 오는 별칭(Alias) 위치에 있으면, 해당 예약어를 함수나 키워드가 아닌 '내가 새로 지어준 이름'으로 정확히 알아듣는다.
