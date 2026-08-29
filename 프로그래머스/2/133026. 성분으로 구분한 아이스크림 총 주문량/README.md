@@ -221,3 +221,24 @@
       </table>
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 SQL Code Review 📌
+
+### 01. 정답 쿼리
+```sql
+SELECT
+    B.INGREDIENT_TYPE,
+    SUM(A.TOTAL_ORDER) AS TOTAL_ORDER
+FROM FIRST_HALF A
+JOIN ICECREAM_INFO B ON A.FLAVOR = B.FLAVOR
+GROUP BY B.INGREDIENT_TYPE
+ORDER BY TOTAL_ORDER ASC;
+```
+
+### 02. 사전 지식 & SQL 개념
+- `JOIN`의 기본 사용법:
+  ```sql
+  SELECT 컬럼명들
+  FROM 테이블A
+  JOIN 테이블B ON 테이블A.공통컬럼 = 테이블B.공통컬럼;
+  ```
