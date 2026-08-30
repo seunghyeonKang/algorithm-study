@@ -173,3 +173,17 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 SQL Code Review 📌
+
+### 01. 정답 쿼리
+```sql
+SELECT A.BOOK_ID, B.AUTHOR_NAME, A.PUBLISHED_DATE
+FROM BOOK A
+JOIN AUTHOR B ON A.AUTHOR_ID = B.AUTHOR_ID
+WHERE A.CATEGORY = '경제'
+ORDER BY A.PUBLISHED_DATE;
+```
+
+### 02. 사전 지식 & SQL 개념
+- `DATE_FORMAT`: `YYYY-MM-DD` 형식(예: `2020-01-01`)에 맞춰 `DATE_FORMAT(A.PUBLISHED_DATE, '%Y-%m-%d')`를 적용하자.
