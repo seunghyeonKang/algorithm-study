@@ -192,3 +192,23 @@
       </table>
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 SQL Code Review 📌
+
+### 01. 정답 쿼리
+```sql
+SELECT
+    A.PRODUCT_CODE,
+    SUM(A.PRICE * B.SALES_AMOUNT) AS SALES
+FROM PRODUCT A
+JOIN OFFLINE_SALE B ON A.PRODUCT_ID = B.PRODUCT_ID
+GROUP BY A.PRODUCT_CODE
+ORDER BY
+    SALES DESC,
+    A.PRODUCT_CODE ASC;
+```
+
+### 02. 사전 지식 & SQL 개념
+- `PRICE` 컬럼의 `GROUP BY` 누락: 집계 함수 밖의 `PRICE`가 `GROUP BY` 절에 없어 SQL 표준 규칙(ONLY_FULL_GROUP_BY) 기준 오류가 발생한다.
+- 매출액 산출 방식 수정: 개별 건별 매출을 구해 합산하도록 `SUM(A.PRICE * B.SALES_AMOUNT)` 형태로 작성하는 것이 더 안전하고 명확하다.
+- `ORDER BY` 가독성 개선: `SELECT` 절의 매출액 계산식에 별칭(Alias)을 지정하고 `ORDER BY` 절에서 그 별칭을 활용하는 것이 좋다.
