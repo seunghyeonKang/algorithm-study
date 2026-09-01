@@ -174,3 +174,19 @@
       </table>
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 SQL Code Review 📌
+
+### 01. 정답 쿼리
+```sql
+SELECT 
+    COUNT(*) AS FISH_COUNT,
+    B.FISH_NAME
+FROM FISH_INFO A
+JOIN FISH_NAME_INFO B ON A.FISH_TYPE = B.FISH_TYPE
+GROUP BY A.FISH_TYPE, B.FISH_NAME
+ORDER BY FISH_COUNT DESC;
+```
+
+### 02. 사전 지식 & SQL 개념
+- `SELECT` 절의 비집계 컬럼(`B.FISH_NAME`)을 `GROUP BY` 절에 누락하면 standard SQL 위반으로 에러가 발생하므로 `GROUP BY`에 추가하는 것이 좋다.
