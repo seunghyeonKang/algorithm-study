@@ -143,3 +143,20 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 SQL Code Review 📌
+
+### 01. 정답 쿼리
+```sql
+SELECT ANIMAL_ID, NAME, SEX_UPON_INTAKE
+FROM ANIMAL_INS
+WHERE NAME IN ('Lucy', 'Ella', 'Pickle', 'Rogan', 'Sabrina', 'Mitty')
+ORDER BY ANIMAL_ID ASC;
+```
+
+### 02. 사전 지식 & SQL 개념
+- `IN`: 지정한 컬럼의 값이 목록 안에 있는 값 중 하나라도 일치하는지 확인하는 간결한 조건식
+
+  ```sql
+  WHERE 컬럼명 IN (값1, 값2, 값3, ...);
+  ```
