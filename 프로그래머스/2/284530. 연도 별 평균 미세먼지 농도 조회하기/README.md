@@ -197,3 +197,23 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 SQL Code Review 📌
+
+### 01. 정답 쿼리
+```sql
+SELECT
+    DATE_FORMAT(YM, '%Y') AS YEAR,
+    ROUND(AVG(PM_VAL1), 2) AS "PM10",
+    ROUND(AVG(PM_VAL2), 2) AS "PM2.5"
+FROM AIR_POLLUTION
+WHERE
+    LOCATION2 = '수원'
+GROUP BY YEAR
+ORDER BY YEAR ASC;
+```
+
+### 02. 사전 지식 & SQL 개념
+- 별칭에 특수문자(`.`)가 포함될 경우 큰따옴표(`"PM2.5"`)나 백틱(`` `PM2.5` ``)을 사용하자.
+- `AVG()`: 지정한 숫자 컬럼 값들의 산술 평균을 계산하는 집계 함수
+- `DATE_FORMAT()`: 날짜 및 시간 데이터를 지정한 문자열 포맷 형식으로 변환하는 함수
