@@ -187,3 +187,27 @@ ROOT 아이템은 'ITEM_A'가 됩니다.</p>
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 SQL Code Review 📌
+
+### 01. 정답 쿼리
+```sql
+SELECT A.ITEM_ID, A.ITEM_NAME
+FROM ITEM_INFO A
+JOIN ITEM_TREE B ON A.ITEM_ID = B.ITEM_ID
+WHERE B.PARENT_ITEM_ID IS NULL
+ORDER BY A.ITEM_ID ASC;
+```
+
+### 02. 사전 지식 & SQL 개념
+- 동일한 결과를 내는 다른 방법도 참고용으로 알아두자.
+  ```
+  SELECT ITEM_ID, ITEM_NAME
+  FROM ITEM_INFO
+  WHERE ITEM_ID IN (
+      SELECT ITEM_ID
+      FROM ITEM_TREE
+      WHERE PARENT_ITEM_ID IS NULL
+  )
+  ORDER BY ITEM_ID ASC;
+  ```
