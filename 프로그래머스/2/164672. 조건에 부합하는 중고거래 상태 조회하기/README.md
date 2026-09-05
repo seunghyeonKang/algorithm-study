@@ -163,3 +163,39 @@
       </table>
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 SQL Code Review 📌
+
+### 01. 정답 쿼리
+```sql
+SELECT 
+    BOARD_ID,
+    WRITER_ID,
+    TITLE,
+    PRICE,
+    CASE STATUS
+        WHEN 'SALE' THEN '판매중'
+        WHEN 'RESERVED' THEN '예약중'
+        WHEN 'DONE' THEN '거래완료'
+    END AS STATUS
+FROM USED_GOODS_BOARD
+WHERE DATE_FORMAT(CREATED_DATE, '%Y-%m-%d') = '2022-10-05'
+ORDER BY BOARD_ID DESC;
+```
+
+### 02. 사전 지식 & SQL 개념
+- `CASE`문
+  ```sql
+  CASE STATUS
+    WHEN 'SALE' THEN '판매중'
+    WHEN 'RESERVED' THEN '예약중'
+    WHEN 'DONE' THEN '거래완료'
+  END AS STATUS
+  ```
+  - `CASE '칼럼'`: 조건 판별을 진행할 컬럼을 지정한다.
+  - `WHEN '값' THEN '결과'`: 지정한 컬럼의 값이 `WHEN` 뒤의 값과 일치하면 `THEN` 뒤의 값으로 변환한다.
+  - `END`: `CASE` 조건문의 끝을 알린다.
+- `DATE_FORMAT` 함수
+  ```sql
+  DATE_FORMAT(날짜컬럼, '포맷지정자')
+  ```
