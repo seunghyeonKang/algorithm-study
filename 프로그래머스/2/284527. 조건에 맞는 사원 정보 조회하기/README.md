@@ -328,3 +328,26 @@
       </table>
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 SQL Code Review 📌
+
+### 01. 정답 쿼리
+```sql
+SELECT
+    SUM(C.SCORE) AS SCORE,
+    B.EMP_NO,
+    B.EMP_NAME,
+    B.POSITION,
+    B.EMAIL
+FROM HR_EMPLOYEES B
+JOIN HR_GRADE C ON B.EMP_NO = C.EMP_NO
+WHERE C.YEAR = '2022'
+GROUP BY B.EMP_NO
+ORDER BY SCORE DESC
+LIMIT 1;
+```
+
+### 02. 사전 지식 & SQL 개념
+- Standard SQL 규격에서는 `GROUP BY`를 사용할 때 `SELECT` 절에 있는 컬럼 중 집계 함수(`SUM`, `COUNT` 등)를 적용하지 않은 모든 컬럼은 반드시 `GROUP BY` 절에도 명시해야 한다.
+- `SUM(C.SCORE)`: 특정 그룹(사원)에 속한 여러 행의 `SCORE` 값을 모두 더해 총점을 계산하는 집계 함수이다.
+- `LIMIT 1`: 정렬된 전체 조회 결과 중에서 가장 상단의 1개 행만 추출하는 구문이다.
