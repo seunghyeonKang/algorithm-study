@@ -134,3 +134,31 @@
       </table>
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 SQL Code Review 📌
+
+### 01. 정답 쿼리
+```sql
+SELECT 
+    CAR_ID,
+    CASE 
+        WHEN MAX(CASE WHEN '2022-10-16' BETWEEN START_DATE AND END_DATE THEN 1 ELSE 0 END) = 1 
+        THEN '대여중'
+        ELSE '대여 가능'
+    END AS AVAILABILITY
+FROM CAR_RENTAL_COMPANY_RENTAL_HISTORY
+GROUP BY CAR_ID
+ORDER BY CAR_ID DESC;
+```
+
+### 02. 사전 지식 & SQL 개념
+- `CASE` 문은 `SELECT` 절 내부에서 새로운 컬럼을 만들 때 사용되어야 한다.
+1. 차랑별 그룹화
+   - `GROUP BY CAR_ID`: 동일한 차량의 기록을 하나의 그룹으로 묶는다.
+2. 개별 기록의 대여 여부 판별
+   - `CASE WHEN '2022-10-16' BETWEEN START_DATE AND END_DATE THEN 1 ELSE 0 END`
+   - 각 대여 기록(행)마다 2022년 10월 16일이 대여 기간(START_DATE ~ END_DATE) 사이에 있는지를 확인한다.
+3. 그룹 내 대여 여부 합산 및 판별
+   - `MAX(...)`: `GROUP BY`로 묶인 특정 차량의 여러 대여 기록들 중, 위에서 계산된 결과값(1 또는 0)의 최댓값(MAX)을 구한다.
+4. 최종 문자열 출력
+   - 바깥쪽 `CASE WHEN`: MAX의 결과값이 1인지 비교하여 최종 결과값을 문자열로 치환한다.
