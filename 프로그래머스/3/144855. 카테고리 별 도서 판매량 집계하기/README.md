@@ -217,3 +217,22 @@
       </table>
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 SQL Code Review 📌
+
+### 01. 정답 쿼리
+```sql
+SELECT 
+    A.CATEGORY, 
+    SUM(B.SALES) AS TOTAL_SALES
+FROM BOOK A
+JOIN BOOK_SALES B ON A.BOOK_ID = B.BOOK_ID
+WHERE B.SALES_DATE >= '2022-01-01' AND B.SALES_DATE < '2022-02-01'
+GROUP BY A.CATEGORY
+ORDER BY A.CATEGORY ASC;
+```
+
+### 02. 사전 지식 & SQL 개념
+- `COUNT`는 행 개수를 센다. 따라서 총 판매량을 합산할 때 `SUM`을 사용해야 한다.
+- `DATE_FORMAT`을 사용할 때에는 `'2022-01'`와 같이 따옴표를 사용해야 연산식으로 처리되는 오류를 방지한다.
+- 성능을 위해 `DATE_FORMAT` 대신 날짜 범위(`BETWEEN` 또는 `>=`) 조건을 사용하는 것이 좋다.
