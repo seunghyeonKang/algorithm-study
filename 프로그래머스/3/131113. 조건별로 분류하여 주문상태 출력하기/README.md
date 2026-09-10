@@ -188,3 +188,27 @@
       </table>
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 SQL Code Review 📌
+
+### 01. 정답 쿼리
+```sql
+SELECT
+    ORDER_ID,
+    PRODUCT_ID,
+    OUT_DATE,
+    CASE
+        WHEN OUT_DATE <= '2022-05-01' THEN '출고완료'
+        WHEN OUT_DATE > '2022-05-01' THEN '출고대기'
+        ELSE '출고미정'
+    END AS "출고여부"
+FROM FOOD_ORDER
+ORDER BY ORDER_ID ASC;
+```
+
+### 02. 사전 지식 & SQL 개념
+- 날짜 리터럴은 반드시 작은따옴표로 감싸서 `'2022-05-01'` 형태로 지정해야 한다.
+- `DATETIME` 또는 `DATE` 타입 컬럼을 그대로 조회하면 DB 설정에 따라 `2022-05-01 00:00:00`처럼 시/분/초까지 출력될 수 있다. 문제에서 요구하는 예시 포맷(`YYYY-MM-DD`)을 맞추기 위해 `DATE_FORMAT` 함수를 적용하자.
+  ```sql
+  DATE_FORMAT(OUT_DATE, '%Y-%m-%d') AS OUT_DATE
+  ```
