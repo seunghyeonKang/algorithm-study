@@ -255,3 +255,23 @@
       </table>
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 SQL Code Review 📌
+
+### 01. 정답 쿼리
+```sql
+SELECT
+    B.USER_ID,
+    B.NICKNAME,
+    SUM(A.PRICE) AS TOTAL_SALES
+FROM USED_GOODS_BOARD A
+JOIN USED_GOODS_USER B ON A.WRITER_ID = B.USER_ID
+WHERE A.STATUS = 'DONE'
+GROUP BY B.USER_ID, B.NICKNAME
+HAVING SUM(A.PRICE) >= 700000
+ORDER BY TOTAL_SALES ASC;
+```
+
+### 02. 사전 지식 & SQL 개념
+- `HAVING`: `GROUP BY`를 통해 그룹화된 후 집계 결과에 대한 필터링은 `WHERE` 대신 `HAVING`을 사용한다.
+- `HAVING` 절에서는 별칭인 `TOTAL_SALES >= 700000`으로 작성해도 대부분의 DBMS(MySQL 등)에서 동작한다.
