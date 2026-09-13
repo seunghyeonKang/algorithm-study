@@ -175,3 +175,20 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 SQL Code Review 📌
+
+### 01. 정답 쿼리
+```sql
+SELECT A.ANIMAL_ID, A.NAME
+FROM ANIMAL_INS A
+JOIN ANIMAL_OUTS B ON A.ANIMAL_ID = B.ANIMAL_ID
+WHERE A.DATETIME > B.DATETIME
+ORDER BY A.DATETIME ASC;
+```
+
+### 02. 사전 지식 & SQL 개념
+- `JOIN`: 기본적으로 `INNER JOIN`으로 동작한다. 의도를 더 확실히 나타내고 싶다면 `INNER JOIN`으로 명시해 줘도 좋다.
+  ```sql
+  INNER JOIN ANIMAL_OUTS B ON A.ANIMAL_ID = B.ANIMAL_ID
+  ```
