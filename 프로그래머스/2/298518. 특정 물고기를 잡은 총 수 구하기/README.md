@@ -201,3 +201,16 @@
       </table>
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 SQL Code Review 📌
+
+### 01. 정답 쿼리
+```sql
+SELECT COUNT(*) AS FISH_COUNT
+FROM FISH_INFO A
+JOIN FISH_NAME_INFO B ON A.FISH_TYPE = B.FISH_TYPE
+WHERE B.FISH_NAME IN ('BASS', 'SNAPPER');
+```
+
+### 02. 사전 지식 & SQL 개념
+- `IN`: 지정한 여러 값 중 하나라도 일치하면 참(`True`)이 되는 조건을 만드는 구문
