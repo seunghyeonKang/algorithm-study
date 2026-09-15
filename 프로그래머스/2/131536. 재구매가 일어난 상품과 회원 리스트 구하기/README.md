@@ -151,3 +151,19 @@
       </table>
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+## 📌 SQL Code Review 📌
+
+### 01. 정답 쿼리
+```sql
+SELECT USER_ID, PRODUCT_ID
+FROM ONLINE_SALE
+GROUP BY USER_ID, PRODUCT_ID
+HAVING COUNT(*) >= 2
+ORDER BY
+    USER_ID ASC,
+    PRODUCT_ID DESC;
+```
+
+### 02. 사전 지식 & SQL 개념
+- `GROUP BY`에 칼럼을 2개 이상 넣으면 '두 칼럼의 값이 모두 똑같은 행들'끼리만 하나의 그룹으로 묶이는 원리다.
