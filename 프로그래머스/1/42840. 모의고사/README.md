@@ -73,3 +73,72 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+# 📌 Code Review 📌
+
+## 01. 기존 풀이
+```javascript
+function solution(answers) {
+    const studentArr1 = [1, 2, 3, 4, 5];
+    const studentArr2 = [2, 1, 2, 3, 2, 4, 2, 5];
+    const studentArr3 = [3, 3, 1, 1, 2, 2, 4, 4, 5, 5];
+    let countScore1 = 0;
+    let countScore2 = 0;
+    let countScore3 = 0;
+    
+    for (let i = 0; i < answers.length; i++) {
+        const answer = answers[i];
+        if (studentArr1[i % 5] === answer) countScore1++;
+        if (studentArr2[i % 8] === answer) countScore2++;
+        if (studentArr3[i % 10] === answer) countScore3++;
+    }
+    
+    const maxScore = Math.max(countScore1, countScore2, countScore3);
+    const maxStudents = [];
+    
+    if (countScore1 === maxScore) maxStudents.push(1);
+    if (countScore2 === maxScore) maxStudents.push(2);
+    if (countScore3 === maxScore) maxStudents.push(3);
+    
+    return maxStudents;
+}
+```
+
+## 02. AI 피드백 & 사전지식
+- 배열과 반복문을 활용해 코드를 조금 더 간결하고 확장성 있게 리팩토링할 수 있다.
+
+## 03. 다른 풀이: 확장성있는 버전
+```javascript
+function solution(answers) {
+    // 각 수포자의 패턴 정의
+    const patterns = [
+        [1, 2, 3, 4, 5],
+        [2, 1, 2, 3, 2, 4, 2, 5],
+        [3, 3, 1, 1, 2, 2, 4, 4, 5, 5]
+    ];
+    
+    // 각 수포자의 점수를 저장할 배열
+    const scores = [0, 0, 0];
+    
+    // 점수 채점
+    for (let i = 0; i < answers.length; i++) {
+        const answer = answers[i];
+        if (patterns[0][i % patterns[0].length] === answer) scores[0]++;
+        if (patterns[1][i % patterns[1].length] === answer) scores[1]++;
+        if (patterns[2][i % patterns[2].length] === answer) scores[2]++;
+    }
+    
+    // 최고 점수 구하기
+    const maxScore = Math.max(...scores);
+    
+    // 최고 점수를 받은 사람들을 찾아 배열에 담기 (1번부터 시작하므로 인덱스 + 1)
+    const maxStudents = [];
+    for (let i = 0; i < scores.length; i++) {
+        if (scores[i] === maxScore) {
+            maxStudents.push(i + 1);
+        }
+    }
+    
+    return maxStudents;
+}
+```
