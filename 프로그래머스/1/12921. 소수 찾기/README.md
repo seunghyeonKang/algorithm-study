@@ -58,3 +58,57 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+# 📌 Code Review 📌
+
+## 01. 기존 풀이
+```javascript
+function solution(n) {
+    let count = 0;
+    
+    for (let i = 2; i <= n; i++) {
+        let isComplete = true;
+        for (let j = 2; j <= Math.sqrt(i); j++) {
+            if (i % j === 0) {
+                isComplete = false;
+                break;
+            }
+        }
+        if (isComplete) count++;
+    }
+    
+    return count;
+}
+```
+
+## 02. AI 피드백 & 사전지식
+- 에라토스테네스의 체: 1,000,000 이하의 범위에서 소수를 구할 때는 각 숫자를 일일이 검사하는 것보다, 배열을 이용해 소수의 배수를 지워나가는 알고리즘을 사용하는 것이 훨씬 빠르다. 시간복잡도: $O(n \log \log n)$
+
+## 03. 개선 풀이: 에라토스테네스의 체 알고리즘
+```javascript
+function solution(n) {
+    // 0부터 n까지의 숫자를 true로 초기화한 배열 생성
+    const isPrime = new Array(n + 1).fill(true);
+    
+    // 0과 1은 소수가 아니므로 false로 설정
+    isPrime[0] = isPrime[1] = false;
+    
+    // 2부터 시작하여 제곱근(Math.sqrt(n))까지만 확인
+    for (let i = 2; i <= Math.sqrt(n); i++) {
+        if (isPrime[i]) {
+            // i의 배수들을 차례대로 false로 변경 (i * i부터 시작하는 것이 효율적)
+            for (let j = i * i; j <= n; j += i) {
+                isPrime[j] = false;
+            }
+        }
+    }
+    
+    // true로 남아있는 값들의 개수(소수의 개수)를 카운트
+    let count = 0;
+    for (let i = 2; i <= n; i++) {
+        if (isPrime[i]) count++;
+    }
+    
+    return count;
+}
+```
