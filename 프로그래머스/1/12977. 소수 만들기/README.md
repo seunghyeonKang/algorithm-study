@@ -61,3 +61,66 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+# 📌 Code Review 📌
+
+## 01. 기존 풀이
+```javascript
+function solution(nums) {
+    const sumArr = [];
+    
+    for (let i = 0; i < nums.length - 2; i++) {
+        for (let j = i + 1; j < nums.length - 1; j++) {
+            for (let k = j + 1; k < nums.length; k++) {
+                sumArr.push(nums[i] + nums[j] + nums[k]);
+            }
+        }
+    }
+    
+    let count = 0;
+    for (const n of sumArr) {
+        let isPrime = true;
+        for (let i = 2; i <= Math.sqrt(n); i++) {
+            if (n % i === 0) isPrime = false;
+        }
+        if (isPrime) count++;
+    }
+    
+    return count;
+}
+```
+
+## 02. AI 피드백 & 사전지식
+- 소수 판별 루프의 최적화: `break` 추가
+- 불필요한 배열 생성 제거: 조합의 개수가 약 19,600개 정도로 적어 메모리 부담은 크지 않지만, 3중 루프 안에서 합을 구함과 동시에 소수 판별을 수행하고 `count`를 증가시키면 배열을 만들지 않아도 된다.
+
+## 03. 개선 풀이
+```javascript
+function solution(nums) {
+    let count = 0;
+
+    // 소수 판별 함수
+    const isPrime = (n) => {
+        for (let i = 2; i <= Math.sqrt(n); i++) {
+            if (n % i === 0) return false; // 약수가 발견되면 즉시 false 반환
+        }
+        return true;
+    };
+
+    // 3개의 수를 고르는 조합
+    for (let i = 0; i < nums.length - 2; i++) {
+        for (let j = i + 1; j < nums.length - 1; j++) {
+            for (let k = j + 1; k < nums.length; k++) {
+                const sum = nums[i] + nums[j] + nums[k];
+                
+                // 합이 소수인지 확인 후 카운트 증가
+                if (isPrime(sum)) {
+                    count++;
+                }
+            }
+        }
+    }
+
+    return count;
+}
+```
