@@ -78,3 +78,58 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+# 📌 Code Review 📌
+
+## 01. 기존 풀이
+```javascript
+function solution(word) {
+    let wordsArray = [];
+    const alp = ["A", "E", "I", "O", "U"];
+    
+    const pushWords = (str) => {
+        // 단어 추가
+        if (str.length >= 1 && str.length <= 5) wordsArray.push(str);
+        
+        // 단어 길이가 4 이하 -> 그 단어에 5개 단어를 추가한 함수 호출
+        if (str.length <= 4) {
+            for (let i = 0; i < 5; i++) {
+                pushWords(str + alp[i]);
+            }
+        }
+    }
+    
+    pushWords("");
+    
+    return wordsArray.sort().indexOf(word) + 1;
+}
+```
+
+## 02. AI 피드백 & 사전지식
+- 불필요한 `.sort()` 연산 제거: 재귀 함수 내부에서 `alp` 배열의 순서(`"A", "E", "I", "O", "U"`)대로 차례대로 탐색하기 때문에, `wordsArray`에 담기는 단어들은 이미 완벽한 사전순으로 정렬되어 생성되므로 마지막에 `.sort()`는 생략해도 된다.
+
+## 03. 다른 풀이: 수학적 규칙 방식 - 시간·공간 복잡도: 시간 $O(L)$, 공간 $O(1)$
+```javascript
+function solution(word) {
+    const alp = ["A", "E", "I", "O", "U"];
+    // 각 자리별 가중치 미리 계산 (781, 156, 31, 6, 1)
+    const weights = [781, 156, 31, 6, 1]; 
+
+    let answer = 0;
+
+    for (let i = 0; i < word.length; i++) {
+        const charIdx = alp.indexOf(word[i]);
+        // (문자 인덱스 * 가중치) + 본인 단어 카운트(+1)
+        answer += charIdx * weights[i] + 1;
+    }
+
+    return answer;
+}
+```
+- 메모리를 거의 쓰지 않고 연산 횟수가 극도로 적어 이론적으로 완벽하게 효율적이다. 다만, 규칙을 유도해내는 아이디어가 필요하다.
+  - 첫 번째 자리 (`i = 0`): 문자가 바뀔 때마다 뒤에 올 수 있는 모든 경우의 수 ($5^4 + 5^3 + 5^2 + 5^1 + 1$) = 781개씩 건너뛴다.
+  - 두 번째 자리 (`i = 1`): ($5^3 + 5^2 + 5^1 + 1$) = 156개씩 건너뛴다.
+  - 세 번째 자리 (`i = 2`): ($5^2 + 5^1 + 1$) = 31개씩 건너뛴다.
+  - 네 번째 자리 (`i = 3`): ($5^1 + 1$) = 6개씩 건너뛴다.
+  - 다섯 번째 자리 (`i = 4`): 1개씩 건너뛴다.
+- 계산 공식: `(해당 문자의 인덱스 × 해당 자리의 가중치)의 총합 + 단어의 길이`
