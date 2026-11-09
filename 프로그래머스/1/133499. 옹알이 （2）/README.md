@@ -81,3 +81,39 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+# 📌 Code Review 📌
+
+## 01. 기존 풀이 (힌트 받음)
+```javascript
+function solution(babbling) {
+    let count = 0;
+    const possibleWords = [ "aya", "ye", "woo", "ma" ];
+    const impossibleWords = [ "ayaaya", "yeye", "woowoo", "mama" ];
+    
+    for (let i = 0; i < babbling.length; i++) {
+        let word = babbling[i];
+        for (const possibleWord of possibleWords) {
+            word = word.split(possibleWord).join(" ");
+        }
+        if (word.trim() === "") {
+            word = babbling[i];
+            let isInclude = false;
+            for (const possibleWord of impossibleWords) {
+                if (word.includes(possibleWord)) {
+                    isInclude = true;
+                    break;
+                }
+            }
+            
+            if (!isInclude) count++;
+        }
+    }
+    
+    return count;
+}
+```
+
+## 02. AI 피드백 & 사전지식
+- `.join("")`을 사용하면 '문자열 이어붙임(글자 합성)' 현상이 일어나 허점이 발생할 수 있다.
+- 특정 문자나 단어가 포함되어있는지 확인할 때에는 `includes()`, `split()`, `join()` 등을 사용하는 것이 좋다.
