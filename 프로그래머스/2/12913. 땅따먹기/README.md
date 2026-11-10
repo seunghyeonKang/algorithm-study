@@ -62,3 +62,21 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+# 📌 Code Review 📌
+
+## 01. 기존 풀이 (힌트 많이 참조)
+```javascript
+function solution(land) {
+    for (let i = 1; i < land.length; i++) {
+        land[i][0] += Math.max(land[i - 1][1], land[i - 1][2], land[i - 1][3]);
+        land[i][1] += Math.max(land[i - 1][0], land[i - 1][2], land[i - 1][3]);
+        land[i][2] += Math.max(land[i - 1][0], land[i - 1][1], land[i - 1][3]);
+        land[i][3] += Math.max(land[i - 1][0], land[i - 1][1], land[i - 1][2]);
+    }
+    return Math.max(...land[land.length - 1]);
+}
+```
+
+## 02. AI 피드백 & 사전지식
+- 행의 개수($N$)가 커질 경우 분기가 너무 많아져서 시간 초과가 발생할 수 있다. 따라서 동적 계획법 알고리즘을 사용하여 효율적으로 접근해야 한다.
