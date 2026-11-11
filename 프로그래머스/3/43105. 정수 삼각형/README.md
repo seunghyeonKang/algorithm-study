@@ -48,3 +48,27 @@
       </table>
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+# 📌 Code Review 📌
+
+## 01. 기존 풀이
+```javascript
+function solution(triangle) {
+    for (let i = 1; i < triangle.length; i++) {
+        for (let j = 0; j < triangle[i].length; j++) {
+            if (j - 1 < 0) {
+                triangle[i][j] += triangle[i-1][j];
+            } else if (j === triangle[i].length - 1) {
+                triangle[i][j] += triangle[i-1][j-1];
+            } else {
+                triangle[i][j] += Math.max(triangle[i-1][j-1], triangle[i-1][j]);
+            }
+        }
+    }
+    
+    return Math.max(...triangle[triangle.length - 1]);
+}
+```
+
+## 02. AI 피드백 & 사전지식
+- 공간 효율성($O(1)$ 공간 복잡도)과 시간 복잡도 ($O(N^2)$)를 적절하게 작성했다.
