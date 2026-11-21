@@ -4,7 +4,7 @@
 
 ### 성능 요약
 
-메모리: 32.3 MB, 시간: 0.03 ms
+메모리: 11.5 MB, 시간: 237.23 ms
 
 ### 구분
 
@@ -16,7 +16,7 @@
 
 ### 제출 일자
 
-2026년 05월 10일 09:19:23
+2026년 11월 21일 23:37:31
 
 ### 문제 설명
 
@@ -56,55 +56,3 @@ n이 양의 정수 x의 제곱이라면 x+1의 제곱을 리턴하고, n이 양�
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
-
-## 📌풀이 메모
-
-### 01. 기존 풀이
-```
-function solution(n) {
-    let answer = 0;
-    
-    if (Math.sqrt(n) === Math.floor(Math.sqrt(n))) {
-        answer = (Math.sqrt(n) + 1) ** 2;
-    } else {
-        answer = -1;
-    }
-    
-    return answer;
-}
-```
-→ `Math.sqrt(n)`을 반복 호출중
-
-→ 부동소수점 오차 위험
-
-(JavaScript의 Math.sqrt()는 부동소수점 연산을 사용하기 때문에, 큰 수에서 미세한 오차가 발생할 수 있다.)
-
-### 02. 개선 방향: `floor` 대신 `%`로 정수 확인
-```
-function solution(n) {
-    const x = Math.sqrt(n);
-    
-    if (x % 1 === 0) {
-        return (x + 1) ** 2;
-    }
-    
-    return -1;
-}
-```
-
-### 03. 개선 방향: 부동소수점 오차 검증
-```
-function solution(n) {
-    const sqrt = Math.round(Math.sqrt(n));
-
-    if (sqrt * sqrt === n) {
-        return (sqrt + 1) ** 2;
-    }
-
-    return -1;
-}
-```
-
-### 04. 사전 지식
-- `Math.sqrt()`: 주어진 수의 제곱근(Square Root)을 반환하는 함수
-- `Math.round()`: 소수점 이하를 반올림하여 가장 가까운 정수를 반환하는 함수
