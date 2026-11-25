@@ -4,7 +4,7 @@
 
 ### 성능 요약
 
-메모리: 32.7 MB, 시간: 0.08 ms
+메모리: 11.5 MB, 시간: 0.05 ms
 
 ### 구분
 
@@ -16,7 +16,7 @@
 
 ### 제출 일자
 
-2026년 05월 24일 00:35:59
+2026년 11월 25일 18:41:28
 
 ### 문제 설명
 
@@ -73,33 +73,3 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
-
-## 📌 Code Review 📌
-
-### 01. 기존 풀이
-```
-function solution(a, b) {
-    let answer = 0;
-    
-    for (let i = 0; i < a.length; i++) {
-        answer += a[i]*b[i];
-    }
-    
-    return answer;
-}
-```
-
-### 02. 다른 풀이: `reduce` 활용
-```
-function solution(a, b) {
-    return a.reduce((acc, cur, i) => acc + cur * b[i], 0);
-}
-```
-
-### 03. 다른 풀이: `map`와 `reduce` 활용
-```
-function solution(a, b) {
-    return a.map((x, i) => x * b[i]).reduce((acc, cur) => acc + cur, 0);
-}
-```
-→ 의도를 단계적으로 명확히 표현한다. 다만 배열을 한 번 더 순회하므로 미세하게 비효율적이다.
