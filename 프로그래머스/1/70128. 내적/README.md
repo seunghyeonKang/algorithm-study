@@ -73,3 +73,20 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+# 📌 Code Review 📌
+
+## 01. 기존 풀이
+```python
+def solution(a, b):
+    answer = 0
+    for i in range(0, len(a)):
+        answer += a[i] * b[i]
+    return answer
+```
+
+## 02. 다른 풀이: `zip()`과 `sum()`을 활용한 파이썬다운 풀이
+```python
+def solution(a, b):
+    return sum(x * y for x, y in zip(a, b))
+```
